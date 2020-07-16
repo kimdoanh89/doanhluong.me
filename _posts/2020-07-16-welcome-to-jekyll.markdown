@@ -1,29 +1,42 @@
 ---
-layout: post
-title:  "Welcome to Jekyll!"
+layout: posts
+title:  "NetBox APIs with POSTMAN and Python"
 date:   2020-07-16 19:24:15 +0100
 categories: about
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+## 1. Install NetBox-docker in the Ubuntu-control-station
+- This Ubuntu-control-station is a Virtual machine, installed in the
+Windows 10 host machine.
+- Install docker-compose on the VM
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
 
-Jekyll requires blog post files to be named according to the following format:
+- Install netbox-docker, follow the instructions [here](https://github.com/netbox-community/netbox-docker).
+```bash
+git clone -b release https://github.com/netbox-community/netbox-docker.git
+cd netbox-docker
+tee docker-compose.override.yml <<EOF
+version: '3.4'
+services:
+  nginx:
+    ports:
+      - 8000:8080
+EOF
+docker-compose pull
+docker-compose up -d
+```
 
-`YEAR-MONTH-DAY-title.MARKUP`
+- Add the hostname in **Windows 10** host machine at `C:\Windows\System32\drivers\etc\hosts`
+```bash
+192.168.134.128 gns3vm
+192.168.100.147 ubuntu
+```
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+- Access the Netbox on your Windows 10 host machine at `http://ubuntu:8000/`.
+  - Credential: admin/admin.
 
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
-
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+## 2. Exploring NETBOX APIs with POSTMAN
+- Access API docs at `http://ubuntu:8000/api/docs/`.
