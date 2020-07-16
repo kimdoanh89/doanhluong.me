@@ -4,3 +4,4 @@ gem "github-pages", group: :jekyll_plugins
 gem 'ruby-oembed'
 gem 'jekyll-last-modified-at'
 gem 'jekyll-twitter-plugin'
+gem 'jekyll-include-cache'

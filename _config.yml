@@ -1,8 +1,3 @@
 remote_theme: "mmistakes/minimal-mistakes@4.19.3"
 plugins:
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
-  - jemoji
   - jekyll-include-cache
