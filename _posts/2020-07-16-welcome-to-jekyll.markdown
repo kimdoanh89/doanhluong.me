@@ -2,7 +2,11 @@
 layout: single
 title:  "NetBox APIs with POSTMAN and Python"
 date:   2020-07-16 19:24:15 +0100
-categories: about
+categories: netbox
+# classes: wide
+toc: true
+toc_label: "On This Post"
+toc_icon: "cog"
 ---
 ## 1. Install NetBox-docker in the Ubuntu-control-station
 - This Ubuntu-control-station is a Virtual machine, installed in the
