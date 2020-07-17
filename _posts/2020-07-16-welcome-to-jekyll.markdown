@@ -1,5 +1,5 @@
 ---
-layout: posts
+layout: single
 title:  "NetBox APIs with POSTMAN and Python"
 date:   2020-07-16 19:24:15 +0100
 categories: about

@@ -1,3 +1,37 @@
 remote_theme: "mmistakes/minimal-mistakes@4.19.3"
+
+minimal_mistakes_skin: "air" # "default", "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
+
 plugins:
   - jekyll-include-cache
+
+github: [metadata]
+
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      read_time: true
+      comments: true
+      share: true
+      related: true
+
+title: "doanhluong.me"
+name: "Doanh Luong"
+url: "https://kimdoanh89.github.io/doanhluong.me"
+
+comments:
+  provider: "disqus"
+  disqus:
+    shortname: "doanhluong"
+
+search: true
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/kimdoanh89"
