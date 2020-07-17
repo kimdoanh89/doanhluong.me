@@ -257,6 +257,7 @@ DEPENDENCIES
   jekyll-archives
   jekyll-include-cache
   jekyll-last-modified-at
+  jekyll-paginate
   jekyll-twitter-plugin
   ruby-oembed
   wdm (>= 0.1.0)

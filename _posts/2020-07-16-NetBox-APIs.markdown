@@ -10,7 +10,6 @@ toc_label: "On This Post"
 This is the first post in a series about using NetBox for network management.
 In this post, we will:
 - **Install NetBox-docker**
-- **Exploring NetBox GUI**: how to create devices, platforms, etc.
 - **Exploring NetBox APIs with POSTMAN**: we will build a NetBox postman
 collections for create site, create/modify/delete devices with POST/PATCH/DELETE
 HTTP methods.
@@ -30,7 +29,7 @@ network management:
 # 2. Installation
 ## 2.1. Setup Development Environment
 
-In this post, I use a local Windows 10 workstation and an Ubuntu 20.04
+In this post, we use a local Windows 10 workstation and an Ubuntu 20.04
 virtual machine that will install NetBox-docker. This VM has a NAT IP
 address of `192.168.100.147`.
 
@@ -73,8 +72,61 @@ Once installed, we can access the Netbox GUI on the local Windows 10
 host machine at `http://ubuntu:8000/`.
   - Credential: admin/admin.
 
-# 3. NetBox GUI
+# 3. NetBox APIs 
+## 3.1. Exploring NetBox APIs with POSTMAN
+The NetBox API employs token-based authentication. To know the default
+token, navigate to the API tokens page at `http://ubuntu:8000/user/api-tokens/`.
+We will need this token to be set in the Header of our POSTMAN requests.
 
-# 4. NetBox APIs 
-## 4.1. Exploring NetBox APIs with POSTMAN
-- Access API docs at `http://ubuntu:8000/api/docs/`.
+We can access Netbox API documentation at `http://ubuntu:8000/api/docs/`.
+The API documentation looks something like this.
+![](/assets/01_Netbox_APIs/images/01_Netbox_APIs/01_API_documentation.png)
+
+Create the POSTMAN collection and name it as `NETBOX`.
+![](/assets/01_Netbox_APIs/images/01_Netbox_APIs/00_create_NETBOX_postman_collection.png)
+
+We create the first `Get devices` RESTCONF request:
+- Determine which API we want to use `/api/dcim/devices/`.
+- HTTP method: `GET`.
+- Headers:
+  - Accept: application/json
+  - Authorization: Token 0123456789abcdef0123456789abcdef01234567
+
+![](/assets/01_Netbox_APIs/images/01_Netbox_APIs/02_get_devices.png)
+
+We continue to create another `Create devices` RESTCONF request:
+- We use the same API `/api/dcim/devices/`.
+- HTTP method: `PUT`.
+- Headers:
+  - Content-Type: application/json
+  - Authorization: Token 0123456789abcdef0123456789abcdef01234567
+- In this `PUT` request, we have to define the configuration of the 
+devices we want to create in the `Body`. For example, we create 2 devices,
+namely `CORE1` and `CORE2`.
+
+```json
+[ 
+    {
+    "id": 4,
+    "name": "CORE3",
+    "device_type": 2,
+    "device_role": 2,
+    "status": 1,
+    "site": 1
+    },
+    {
+    "id": 5,
+    "name": "CORE4",
+    "device_type": 2,
+    "device_role": 2,
+    "status": 1,
+    "site": 2
+    }
+]
+```
+
+Send the request and verify the status code returned is `201 Created`.
+The full POSTMAN collection can be found [here](/assets/sources/01_Netbox_APIs/NETBOX.postman_collection.json).
+## 3.2. Using Python to send the RESTCONF requests
+
+We can go further by using Python to send the RESTCONF requests.
