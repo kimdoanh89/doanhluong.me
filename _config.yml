@@ -28,7 +28,8 @@ defaults:
 
 title: "doanhluong.me"
 name: "Doanh Luong"
-url: "https://kimdoanh89.github.io/doanhluong.me"
+url: "https://kimdoanh89.github.io"
+baseurl: "doanhluong.me"
 
 comments:
   provider: "disqus"
