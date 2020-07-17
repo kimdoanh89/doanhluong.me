@@ -80,6 +80,7 @@ We will need this token to be set in the Header of our POSTMAN requests.
 
 We can access Netbox API documentation at `http://ubuntu:8000/api/docs/`.
 The API documentation looks something like this.
+![alt]({{ site.url }}{{ site.baseurl }}/assets/01_Netbox_APIs/images/01_Netbox_APIs/01_API_documentation.png)
 ![](/assets/01_Netbox_APIs/images/01_Netbox_APIs/01_API_documentation.png)
 
 Create the POSTMAN collection and name it as `NETBOX`.
