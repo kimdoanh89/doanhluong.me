@@ -81,7 +81,8 @@ that we created manually.
 
 - The jinja file is as follow:
 
-```bash
+```liquid
+{% raw %}
 default-lease-time 600;
 max-lease-time 7200;
 ddns-update-style none;
@@ -90,13 +91,13 @@ option domain-name-servers 192.168.134.1;
 subnet 192.168.134.0 netmask 255.255.255.0 {
 }
 
-\{% for i in range(1,1001) -%}
+{% for i in range(1,1001) -%}
 class "R{{i}}" {
     match if (option host-name = "R{{i}}");
 }
-\{% endfor %}
+{% endfor %}
 
-\{% for i in range(1,11) -%}
+{% for i in range(1,11) -%}
 subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
   option subnet-mask 255.255.255.0;
   option routers 10.15.{{i}}.254;
@@ -108,6 +109,7 @@ subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
   {% endfor %}
 }
 {% endfor %}
+{% endraw %}
 ```
 
 - The output `dhcpd.conf` file is beautiful, with around 7000 lines of code
