@@ -90,13 +90,13 @@ option domain-name-servers 192.168.134.1;
 subnet 192.168.134.0 netmask 255.255.255.0 {
 }
 
-{% for i in range(1,1001) -%}
+\{% for i in range(1,1001) -%}
 class "R{{i}}" {
     match if (option host-name = "R{{i}}");
 }
-{% endfor %}
+\{% endfor %}
 
-{% for i in range(1,11) -%}
+\{% for i in range(1,11) -%}
 subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
   option subnet-mask 255.255.255.0;
   option routers 10.15.{{i}}.254;
