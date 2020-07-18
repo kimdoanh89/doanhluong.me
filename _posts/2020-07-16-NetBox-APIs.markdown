@@ -27,8 +27,8 @@ network management:
 - Secrets - Encrypted storage of sensitive credentials
 
 # 2. Installation
-## 2.1. Setup Development Environment
 
+## 2.1. Setup Development Environment
 In this post, we use a local Windows 10 workstation and an Ubuntu 20.04
 virtual machine that will install NetBox-docker. This VM has a NAT IP
 address of `192.168.100.147`.
@@ -83,7 +83,6 @@ The API documentation looks something like this.
 {% include figure image_path="/assets/01_Netbox_APIs/images/01_Netbox_APIs/01_API_documentation.png" %}
 Create the POSTMAN collection and name it as `NETBOX`.
 {% include figure image_path="/assets/01_Netbox_APIs/images/01_Netbox_APIs/00_create_NETBOX_postman_collection.png" %}
-
 We create the first `Get devices` RESTCONF request:
 - Determine which API we want to use `/api/dcim/devices/`.
 - HTTP method: `GET`.
@@ -91,8 +90,7 @@ We create the first `Get devices` RESTCONF request:
   - Accept: application/json
   - Authorization: Token 0123456789abcdef0123456789abcdef01234567
 
-![](/assets/01_Netbox_APIs/images/01_Netbox_APIs/02_get_devices.png)
-
+{% include figure image_path="/assets/01_Netbox_APIs/images/01_Netbox_APIs/02_get_devices.png" %}
 We continue to create another `Create devices` RESTCONF request:
 - We use the same API `/api/dcim/devices/`.
 - HTTP method: `PUT`.
@@ -125,7 +123,7 @@ namely `CORE1` and `CORE2`.
 ```
 
 Send the request and verify the status code returned is `201 Created`.
-The full POSTMAN collection can be found [here](/assets/sources/01_Netbox_APIs/NETBOX.postman_collection.json).
+The full POSTMAN collection can be found [here](/assets/01_Netbox_APIs/sources/01_Netbox_APIs/NETBOX.postman_collection.json).
 ## 3.2. Using Python to send the RESTCONF requests
 
 We can go further by using Python to send the RESTCONF requests.
