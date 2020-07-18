@@ -26,14 +26,14 @@ We set up the topology with the following details in mind.
     - In the GNS3 vm: /GNS3/projects/
 
 - IP Adressing:
-![](/assets/02_mega_lab/images/00_ip_addressing.png)
+{% include figure image_path="/assets/02_mega_lab/images/00_ip_addressing.png" %}
 
 ## 1.1. Refine the initial topology
 The topology is refined as in figure below.
 
 The topology is built with three layers: ACCESS, CORE, and EDGE.
 
-![](/assets/02_mega_lab/images/00_initial_topology_v2.png)
+{% include figure image_path="/assets/02_mega_lab/images/00_initial_topology_v2.png" %}
 
 ### Configure EDGE router:
 The steps are as follow:
@@ -162,7 +162,7 @@ ip helper-address 192.168.134.130
 
 The topology as follow:
 
-![](/assets/02_mega_lab/images/01_topology_with_10_routers.png)
+{% include figure image_path="/assets/02_mega_lab/images/01_topology_with_10_routers.png" %}
 
 - Update domain name, DHCP server IP address and gateway IP address in
 `/etc/dhcp/dhcpd.conf`.
