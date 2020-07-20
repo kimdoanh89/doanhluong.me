@@ -2,6 +2,7 @@
 layout: single
 title:  "Mega-lab - Part 3: Using Ansible to gather information from hosts
 and save to a file"
+date:   2020-07-20 22:48:15 +0100
 categories: mega-lab
 toc: true
 toc_label: "On This Post"
@@ -113,7 +114,8 @@ ansible  -i inventory -m command -a "df -k" -u cisco Switch1
 
 ## 3. Create the Ansible playbook
 
-```yaml
+```liquid
+{% raw %}
 ---
 - name: Gather commands
   hosts: Switch1
@@ -136,6 +138,7 @@ ansible  -i inventory -m command -a "df -k" -u cisco Switch1
         reverse | flatten | join('\n') }}"
         dest: "output/{{ inventory_hostname }}.txt"
 
+{% endraw %}
 ```
 
 ## 4. Running the Ansible playbook
