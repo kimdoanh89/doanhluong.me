@@ -1,3 +1,11 @@
+---
+layout: single
+title:  "Mega-lab - Part 3: Using Ansible to gather information from hosts
+and save to a file"
+categories: mega-lab
+toc: true
+toc_label: "On This Post"
+---
 In this post, we will set up an Ansible playbook to collect some information
 from hosts and save the outputs to different files depending on the hostname.
 
@@ -138,10 +146,12 @@ We run the Ansible playbook to gather information:
 - show memory statistics
 - show arp
 - show ip route
+
 The command to run is as follow:
 ```bash
 ansible-playbook -i inventory gather_commands.yml
 ```
+
 Output:
 ```bash
 PLAY [Gather commands] ************************************************************************************************************
