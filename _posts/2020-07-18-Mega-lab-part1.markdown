@@ -6,6 +6,26 @@ categories: mega-lab
 toc: true
 toc_label: "On This Post"
 ---
+This is the first post of a series on setting up an Mega-lab for Network 
+Automation in GNS3 with around 200 devices in the network. To set up a big lab,
+we need to automate as much as possible all the steps.
+
+For example, we have to setup SSH key on each device so that we can connect
+to it using different management platforms, including Ansible, Python 
+netmiko, Nornir. It would be very a heavy task if we have to set up the SSH
+ key manually. Also, the configuration of IP address for each device is not 
+ easy considering a huge number of devices. A good solution would involve 
+ the use of a DHCP server to assign IP address for each device when it starts up.
+ 
+We will go through the following steps using Zero-Touch Provisioning (ZTP) approach.
+Zero-touch provisioning promises that you can install new devices without 
+moving your hands. To someone who is used to connecting a console cable 
+to each and every device, this can seem like wondrous magic. The process 
+of installing a new device with ZTP instead of doing the same thing 
+manually is a breeze. One thing that a lot of people forget about this 
+process is that all the hard work lies in the preparation. A very good 
+reference on ZTP can be found [here](https://networklore.com/ztp-tutorial/introduction/).
+
 # 1. Topology design
 We set up the topology with the following details in mind.
 
@@ -28,14 +48,14 @@ We set up the topology with the following details in mind.
 - IP Adressing:
 {% include figure image_path="/assets/02_mega_lab/images/00_ip_addressing.png" %}
 
-## 1.1. Refine the initial topology
-The topology is refined as in figure below.
+## 1.1. Define the initial topology
+The topology is defined as in figure below.
 
 The topology is built with three layers: ACCESS, CORE, and EDGE.
 
 {% include figure image_path="/assets/02_mega_lab/images/00_initial_topology_v2.png" %}
 
-### Configure EDGE router:
+### Configure EDGE router
 The steps are as follow:
 - Generate RSA key for ssh connection
 - config e0/0: 192.168.134.101
@@ -56,7 +76,7 @@ router eigrp 100
 redistribute static metric 1000 10 255 1 1500
 ```
 
-### Configure CORE1 router:
+### Configure CORE1 router
 The steps are as follow:
 - Generate RSA key for ssh connection
 - config e0/0: 10.15.200.1
@@ -70,7 +90,7 @@ router eigrp 100
 network 10.0.0.0
 ```
 
-### Configure R1:
+### Configure R1
 The steps are as follow:
 - Generate RSA key for ssh connection
 - config e0/0: 10.15.1.1
