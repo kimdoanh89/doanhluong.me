@@ -72,7 +72,7 @@ all:
     ansible_network_os: ios
 ```
 
-We can check the connection to a groups of router defined in the inventory
+We can check the connection to a groups of routers defined in the inventory
 file.
 ```bash
 ansible all -i inventory -m ping
@@ -143,7 +143,7 @@ ansible  -i inventory -m command -a "df -k" -u cisco Switch1
 
 ## 4. Running the Ansible playbook
 
-We run the Ansible playbook to gather information:
+We run the Ansible playbook to gather the following information:
 - show version
 - show ip int br
 - show memory statistics
