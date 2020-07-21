@@ -40,16 +40,17 @@ search: true
 
 author:
   name: "Doanh Luong"
-  # avatar: "/assets/images/bio-photo.jpg"
-  bio: "I am an **amazing** person." # Note: Markdown is allowed
-  location: "Somewhere"
+  avatar: "/assets/photo_id_doanh.jpg"
+  bio: "I have a **passion** for working with Network Automation
+        tools" # Note: Markdown is allowed
+  location: "United Kingdom"
   links:
     - label: "Personal Page"
       icon: "fas fa-fw fa-link"
-      url: "https://mademistakes.com"
+      url: "https://kimdoanh89.github.io/doanhluong.me/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/mmistakes"
+      url: "https://github.com/kimdoanh89"
 
 footer:
   links:
