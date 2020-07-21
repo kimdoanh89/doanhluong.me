@@ -135,7 +135,7 @@ ansible  -i inventory -m command -a "df -k" -u cisco Switch1
     - name: save output to a file
       copy:
         content: "{{output.stdout | zip(commands) |
-        reverse | flatten | join('\n') }}"
+        flatten | join('\n') }}"
         dest: "output/{{ inventory_hostname }}.txt"
 
 {% endraw %}

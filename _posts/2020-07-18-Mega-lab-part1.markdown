@@ -40,7 +40,7 @@ We set up the topology with the following details in mind.
 
 - GNS3:
   - Router image: i86bi-linux-l3-adventerprisek9-15.5.2T
-  - The startup-config is [here](/assets/02_mega_lab/configs/mega-lab-router-startup-config.txt)
+  - The startup-config is [here](https://github.com/kimdoanh89/Network-Automation-in-GNS3/blob/master/docs/MEGA-LAB/configs/mega-lab-router-startup-config.txt)
   - Note: this startup-config has to copy in 2 folders in order to work.
     - In the host machine: C:\Users\kimdo\GNS3\configs\mega-lab-router.txt (kimdo is my computer
     name).
@@ -187,7 +187,7 @@ The topology as follow:
 
 - Update domain name, DHCP server IP address and gateway IP address in
 `/etc/dhcp/dhcpd.conf`.
-  - The full configuration is [here](/assets/02_mega_lab/configs/dhcp.txt)
+  - The full configuration is [here](https://github.com/kimdoanh89/Network-Automation-in-GNS3/blob/master/docs/MEGA-LAB/configs/dhcp.txt)
 
 - Start the routers from R3 to R10, and check the ip address of each
 router.

@@ -149,7 +149,7 @@ subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
 ```
 
 - The output `dhcpd.conf` file is beautiful, with around 7000 lines of code
-of DHCP configurations for 1000 routers.
+of DHCP configurations for 1000 routers. The full `dhcpd.conf` is [here](https://github.com/kimdoanh89/Network-Automation-in-GNS3/blob/master/docs/MEGA-LAB/mega-lab-net-tools-test/output/dhcpd.conf).
 
 - Add a random router R450 to Switch 5 connect to CORE5, bring the router
 R450 up. The router is assigned the correct IP address as expected.
