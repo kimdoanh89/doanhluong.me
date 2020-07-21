@@ -11,7 +11,7 @@ plugins:
   - jekyll-archives
 
 permalink: /:categories/:title/
-paginate: 5 # amount of posts to show
+paginate: 10 # amount of posts to show
 paginate_path: /page:num/
 
 defaults:
@@ -42,7 +42,7 @@ author:
   name: "Doanh Luong"
   avatar: "/assets/photo_id_doanh.jpg"
   bio: "I have a **passion** for working with Network Automation
-        tools" # Note: Markdown is allowed
+        tools such as Ansible, Nornir, Netbox, Python/Asyncio, etc." # Note: Markdown is allowed
   location: "United Kingdom"
   links:
     - label: "Personal Page"

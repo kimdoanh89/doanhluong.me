@@ -2,6 +2,7 @@
 layout: single
 title: "About"
 permalink: /about/
+author_profile: true
 ---
 
 I am Doanh Kim Luong. I am a post-doctoral reseacher at the University of 
