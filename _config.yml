@@ -26,7 +26,7 @@ defaults:
       share: true
       related: true
 
-title: "doanhluong.me"
+title: "doanhluong.me | A Network Automation Blog"
 name: "Doanh Luong"
 url: "https://kimdoanh89.github.io"
 baseurl: "doanhluong.me"
