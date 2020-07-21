@@ -1,6 +1,7 @@
 ---
 layout: single
-title:  "Mega-lab for network automation in GNS3 + Ansible + Python/Jinja2 - Part 1"
+title:  "Mega-lab for network automation in GNS3 + Ansible + Python/Asyncio +
+ Nornir - Part 1"
 date:   2020-07-18 22:48:15 +0100
 categories: mega-lab
 toc: true
@@ -150,7 +151,7 @@ subnet 10.15.1.0 netmask 255.255.255.0 {
 
   pool {
     allow members of "R2";
-    range 10.15.1.20;
+    range 10.15.1.2 10.15.1.2;
   }
 }
 ```

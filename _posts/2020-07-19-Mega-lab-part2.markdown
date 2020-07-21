@@ -1,11 +1,47 @@
 ---
 layout: single
-title:  "Mega-lab for network automation in GNS3 + Ansible + Python/Jinja2 - Part 2"
+title:  "Mega-lab - Part 2: Automatically generate DHCP configurations for 1000
+routers"
 date:   2020-07-18 22:48:15 +0100
 categories: mega-lab
 toc: true
 toc_label: "On This Post"
 ---
+From the previous post, we have set up the initial topology with around 10 
+routers. We manually configured EIGRP routing, SSH connection on each router. 
+We also configured the DHCP server settings on the Ubuntu control station. 
+Using that, when a new router is added to the topology, it will receive a 
+static IP address based on hostname from the DHCP server.
+
+However, the DHCP server configuration file is only for 10 routers. We need
+to use Python and jinja2 template to automatically generate DHCP server
+configurations for 1000 routers.
+
+The DHCP server configuration to assign IP address for router `R2` is as
+follow. This will be used as the baseline for the jinja2 template.
+
+```bash
+option domain-name "lab.doanh";
+option domain-name-servers 192.168.134.1;
+
+subnet 192.168.134.0 netmask 255.255.255.0 {
+}
+
+class "R2" {
+  match if (option host-name = "R2");
+}
+
+subnet 10.15.1.0 netmask 255.255.255.0 {
+  option routers 10.15.1.254;
+  option subnet-mask 255.255.255.0;
+
+  pool {
+    allow members of "R2";
+    range 10.15.1.2 10.15.1.2;
+  }
+}
+```
+
 ## 2. DHCP config with Python/Jinja
 ### 2.1. Adding more CORE routers to the topology
 The topology is as follow:
