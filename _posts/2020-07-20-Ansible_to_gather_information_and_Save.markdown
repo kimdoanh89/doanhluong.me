@@ -6,6 +6,7 @@ date:   2020-07-20 22:48:15 +0100
 categories: mega-lab
 toc: true
 toc_label: "On This Post"
+toc_sticky: true
 ---
 In this post, we will set up an Ansible playbook to collect some information
 from hosts and save the outputs to different files depending on the hostname.

@@ -6,6 +6,7 @@ date:   2020-07-18 22:48:15 +0100
 categories: mega-lab
 toc: true
 toc_label: "On This Post"
+toc_sticky: true
 ---
 This is the first post of a series on setting up an Mega-lab for Network 
 Automation in GNS3 with around 200 devices in the network. To set up a big lab,
