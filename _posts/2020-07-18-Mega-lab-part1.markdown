@@ -10,7 +10,8 @@ toc_sticky: true
 ---
 This is the first post of a series on setting up an Mega-lab for Network 
 Automation in GNS3 with around 1000 devices in the network, thanks to Dmitry 
-Figol and his [network automation marathon](https://www.youtube.com/watch?v=Lwj4xwKXWvI&list=PLSwGHYY8t8JitIVQfb-yqqHOrixUOwGtR).
+Figol and his <a href="https://www.youtube.com/watch?v=Lwj4xwKXWvI&list=PLSwGHYY8t8JitIVQfb-yqqHOrixUOwGtR" target="_blank">Network Automation marathon</a>
+
 
 To set up a big lab, we need to automate as much as possible all the steps. 
 For example, we have to setup SSH key on each device so that we can connect
