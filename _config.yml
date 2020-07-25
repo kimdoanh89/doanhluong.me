@@ -25,6 +25,8 @@ defaults:
       comments: true
       share: true
       related: true
+      sidebar:
+        nav: "docs"
 
 title: "Doanh Luong"
 name: "Doanh Luong"
