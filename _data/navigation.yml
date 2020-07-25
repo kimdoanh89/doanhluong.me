@@ -11,11 +11,11 @@ main:
 docs:
   - title: "MEGA-LAB"
     children:
-      - title: "Mega-lab part 1: Topology design"
+      - title: "Part 1: Topology design and initial setup"
         url: /mega-lab/Mega-lab-part1/
-      - title: "Mega-lab part 2: DHCP configuration"
+      - title: "Part 2: Automatically generate DHCP configuration with Jinja2 template"
         url: /mega-lab/Mega-lab-part2/
-      - title: "Mega-lab part 3: Jinja2 template"
+      - title: "Part 3: Ansible to gather information and save"
         url: /mega-lab/Ansible_to_gather_information_and_Save/
   - title: "NETBOX"
     children:
