@@ -9,7 +9,7 @@ main:
     url: https://github.com/kimdoanh89
 
 docs:
-  - title: "Posts"
+  - title: "MEGA-LAB"
     children:
       - title: "Mega-lab part 1: Topology design"
         url: /mega-lab/Mega-lab-part1/
@@ -17,3 +17,7 @@ docs:
         url: /mega-lab/Mega-lab-part2/
       - title: "Mega-lab part 3: Jinja2 template"
         url: /mega-lab/Ansible_to_gather_information_and_Save/
+  - title: "NETBOX"
+    children:
+      - title: "Netbox APIs with Postman"
+        url: /netbox/NetBox-APIs/
