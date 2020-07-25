@@ -9,15 +9,17 @@ toc_label: "On This Post"
 toc_sticky: true
 ---
 This is the first post of a series on setting up an Mega-lab for Network 
-Automation in GNS3 with around 200 devices in the network. To set up a big lab,
-we need to automate as much as possible all the steps.
+Automation in GNS3 with around 1000 devices in the network, thanks to Dmitry 
+Figol and his [network automation marathon](https://www.youtube.com/watch?v=Lwj4xwKXWvI&list=PLSwGHYY8t8JitIVQfb-yqqHOrixUOwGtR).
 
+To set up a big lab, we need to automate as much as possible all the steps. 
 For example, we have to setup SSH key on each device so that we can connect
 to it using different management platforms, including Ansible, Python 
 netmiko, Nornir. It would be very a heavy task if we have to set up the SSH
- key manually. Also, the configuration of IP address for each device is not 
- easy considering a huge number of devices. A good solution would involve 
- the use of a DHCP server to assign IP address for each device when it starts up.
+ key manually on 1000 routers. Also, the configurations of IP addresses for all devices 
+ are tedious considering a huge number of devices. A good solution would involve 
+ the use of a DHCP server to assign IP address for each device automatically 
+ when it starts up.
  
 We will go through the following steps using Zero-Touch Provisioning (ZTP) approach.
 Zero-touch provisioning promises that you can install new devices without 
