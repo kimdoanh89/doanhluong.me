@@ -9,6 +9,8 @@ main:
     url: https://github.com/kimdoanh89
 
 docs:
+  - title: "Blog"
+    url: /
   - title: "MEGA-LAB"
     children:
       - title: "Part 1: Topology design and initial setup"
