@@ -9,7 +9,7 @@ main:
     url: https://github.com/kimdoanh89
 
 docs:
-  - title: "Blog"
+  - title: "Home"
     url: /
   - title: "MEGA-LAB"
     children:
