@@ -175,8 +175,8 @@ for each group. Let's consider router `R340`, it belongs to group 4 and has the
 number_in_group `j=40`.
   - For group i from 1 to 10
     - For number_in_group j from 1 to 100
-      - define the pool that allows class `R{{(i-1)*100+j}}`
-      - assign IP address `10.15.{{i}}.{{j}}`
+      - define the pool that allows class `R((i-1)*100+j)`
+      - assign IP address `10.15.i.j`
 
 ```liquid
 {% raw %}
