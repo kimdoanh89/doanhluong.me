@@ -148,7 +148,54 @@ subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
 {% endfor %}
 {% endraw %}
 ```
+#### Code Explanation
+We need to generate the DHCP configuration for 1000 routers that is based on the
+hostname of each router. According to our IP addressing scheme, we divide our
+1000 routers into 10 groups:
+- Group 1: R1 to R100 belong to the subnet 10.15.1.0/24 
+- Group 2: R101 to R200 belong to the subnet 10.15.2.0/24 
+- ...
+- Group 10: R901 to R1000 belong to the subnet 10.15.10.0/24 
 
+To generate the DHCP configuration file, the steps are as follows:
+- Step 1: Define 1000 classes, each class corresponds to one Router.
+
+```liquid
+{% raw %}
+{% for i in range(1,1001) -%}
+class "R{{i}}" {
+    match if (option host-name = "R{{i}}");
+}
+{% endfor %}
+{% endraw %}
+```
+
+- Step 2: Define the DHCP pools for each subnet group. We have 100 DHCP pools
+for each group. Let's consider router `R340`, it belongs to group 4 and has the
+number_in_group `j=40`.
+  - For group i from 1 to 10
+    - For number_in_group j from 1 to 100
+      - define the pool that allows class `R{{(i-1)*100+j}}`
+      - assign IP address `10.15.{{i}}.{{j}}`
+
+```liquid
+{% raw %}
+{% for i in range(1,11) -%}
+subnet 10.15.{{i}}.0 netmask 255.255.255.0 {
+  option subnet-mask 255.255.255.0;
+  option routers 10.15.{{i}}.254;
+  {% for j in range(1,101) -%}
+  pool {
+    allow members of "R{{(i-1)*100+j}}";
+    range 10.15.{{i}}.{{j}} 10.15.{{i}}.{{j}};
+  }
+  {% endfor %}
+}
+{% endfor %}
+{% endraw %}
+```
+
+#### Output
 - The output `dhcpd.conf` file is beautiful, with around 7000 lines of code
 of DHCP configurations for 1000 routers. The full `dhcpd.conf` is [here](https://github.com/kimdoanh89/Network-Automation-in-GNS3/blob/master/docs/MEGA-LAB/mega-lab-net-tools-test/output/dhcpd.conf).
 
