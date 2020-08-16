@@ -42,7 +42,7 @@ search: true
 
 author:
   name: "Doanh Luong"
-  avatar: "/assets/photo_id_doanh.jpg"
+  avatar: "/assets/photo_id_doanh_2.jpg"
   bio: "I have a **passion** for working with Network Automation
         tools such as Ansible, Nornir, Netbox, Python/Asyncio, etc." # Note: Markdown is allowed
   location: "United Kingdom"
