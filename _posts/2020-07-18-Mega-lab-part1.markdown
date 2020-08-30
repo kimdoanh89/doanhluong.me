@@ -43,7 +43,7 @@ We set up the topology with the following details in mind.
 - GNS3:
   - Router image: i86bi-linux-l3-adventerprisek9-15.5.2T
   - The startup-config is [here](https://github.com/kimdoanh89/Network-Automation-in-GNS3/blob/master/docs/MEGA-LAB/configs/mega-lab-router-startup-config.txt)
-  - Note: this startup-config has to copy in 2 folders in order to work.
+  - Note: this startup-config has to be copied in 2 folders in order to work.
     - In the host machine: C:\Users\kimdo\GNS3\configs\mega-lab-router.txt (kimdo is my computer
     name).
     - In the GNS3 vm: /GNS3/projects/
@@ -58,6 +58,10 @@ The topology is built with three layers: ACCESS, CORE, and EDGE.
 
 {% include figure image_path="/assets/02_mega_lab/images/00_initial_topology_v2.png" %}
 
+Our goal is to automate the Zero Touch Provision to bring up the lab, as can
+be seen in the following demo.
+
+{% include figure image_path="/assets/02_mega_lab/images/00_ZTP_mega-lab2.gif" %}
 ### Configure EDGE router
 The steps are as follow:
 - Generate RSA key for ssh connection
