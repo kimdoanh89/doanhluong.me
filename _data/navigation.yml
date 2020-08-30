@@ -23,3 +23,7 @@ docs:
     children:
       - title: "Netbox APIs with Postman"
         url: /netbox/NetBox-APIs/
+  - title: "SD-WAN"
+    children:
+      - title: "SD-WAN 20.X setup"
+        url: /sd-wan/SD-WAN-setup/
