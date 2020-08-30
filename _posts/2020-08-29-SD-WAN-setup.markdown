@@ -23,23 +23,22 @@ organization name
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_organization_name.png" %}
 
-- Certificate Authority in vManage, generate key and certificate.
-- In vManage `vshell` mode:
-    ```bash
-    openssl genrsa -out SDWAN.key 2048
-    openssl req -new -x509 -days 2000 -key SDWAN.key -out SDWAN.crt
-    ```
+Certificate Authority in vManage, generate key and certificate. In vManage `vshell` mode:
+```bash
+openssl genrsa -out SDWAN.key 2048
+openssl req -new -x509 -days 2000 -key SDWAN.key -out SDWAN.crt
+```
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/02_controller-certificate-authorization.png" %}
 
-- Self-signed the certificate
-    ```bash
-    openssl req -x509 -new -nodes -key SDWAN.key -sha256 -days 2000 \
-            -subj "/C=UK/ST=LD/L=LD/O=SD-WAN-DOANH/CN=SD-WAN" \
-            -out SDWAN.pem
-    ls
-    cat SDWAN.pem
-    ```
+Self-signed the certificate
+```bash
+openssl req -x509 -new -nodes -key SDWAN.key -sha256 -days 2000 \
+        -subj "/C=UK/ST=LD/L=LD/O=SD-WAN-DOANH/CN=SD-WAN" \
+        -out SDWAN.pem
+ls
+cat SDWAN.pem
+```
 - copy `SDWAN.pem` content to Administration > Settings > Controller Certification Authorization > Enterprise Root Certificate
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/01_SDWAN-pem.png" %}
