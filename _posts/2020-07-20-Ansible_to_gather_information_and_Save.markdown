@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Mega-lab - Part 3: Using Ansible to gather information from hosts
-and save to a file"
+and save to files"
 date:   2020-07-20 22:48:15 +0100
 categories: mega-lab
 toc: true

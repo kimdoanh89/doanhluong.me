@@ -54,9 +54,13 @@ should be: `{"syncRootCertChain":"done"}`.
 - create Certificate Signing Request (CSR): Configuration > Certificates > Controllers > Generate CSR
 - copy the CSR content, go back to vManage `vshell` mode and create vManage.csr
 - sign CSR using openssl
+
+```bash
 openssl x509 -req -in vManage.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vManage.crt -days 2000 -sha256
 ls
 cat vManage.crt
+```
+
 - Copy the content of vManage.crt and install the certificate 
 
 ### 3.2. Adding vBond controller
@@ -70,6 +74,7 @@ vim SDWAN.key
 - Configuration > Certificates > Controller > vBond > View CSR
   - Copy the content to vBond.csr
 - Sign vBond.csr using openssl andd generate vBond.crt
+
 ```bash
 openssl x509 -req -in vBond.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
 cat vSmart.crt
@@ -79,6 +84,7 @@ cat vSmart.crt
 
 ### 3.2. Adding vSmart controller
 In vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+
 ```bash
 vim SDWAN.crt
 vim SDWAN.key
@@ -88,13 +94,16 @@ vim SDWAN.key
 - Configuration > Certificates > Controller > vSmart > View CSR
   - Copy the content to vSmart.csr
 - Sign vSmart.csr using openssl abd generate vSmart.crt
+
 ```bash
 openssl x509 -req -in vSmart.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vSmart.crt -days 2000 -sha256
 cat vSmart.crt
 ```
 
 - Copy the content of vSmart.crt and install the certificate
+
 ### 3.3. Enable tunnel-interface
+
 In vManage + vSmart
 ```bash
 vpn 0

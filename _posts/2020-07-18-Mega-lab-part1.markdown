@@ -51,6 +51,11 @@ We set up the topology with the following details in mind.
 - IP Adressing:
 {% include figure image_path="/assets/02_mega_lab/images/00_ip_addressing.png" %}
 
+Our goal is to automate the Zero Touch Provision to bring up the lab, as can
+be seen in the following demo.
+
+{% include figure image_path="/assets/02_mega_lab/images/00_ZTP_mega-lab2.gif" %}
+
 ## 1.1. Define the initial topology
 The topology is defined as in figure below.
 
@@ -58,10 +63,7 @@ The topology is built with three layers: ACCESS, CORE, and EDGE.
 
 {% include figure image_path="/assets/02_mega_lab/images/00_initial_topology_v2.png" %}
 
-Our goal is to automate the Zero Touch Provision to bring up the lab, as can
-be seen in the following demo.
 
-{% include figure image_path="/assets/02_mega_lab/images/00_ZTP_mega-lab2.gif" %}
 ### Configure EDGE router
 The steps are as follow:
 - Generate RSA key for ssh connection
