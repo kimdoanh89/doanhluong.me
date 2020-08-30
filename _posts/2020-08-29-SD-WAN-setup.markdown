@@ -3,9 +3,10 @@ layout: single
 title:  "Cisco SD-WAN 20.3.1 setup in GNS3"
 date:   2020-08-29 
 categories: sd-wan
-toc: true
+toc: false
 toc_label: "On This Post"
-toc_sticky: true
+toc_sticky: false
+classes: wide
 ---
 ## 1. Introduction
 
