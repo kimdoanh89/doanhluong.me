@@ -25,7 +25,7 @@ defaults:
       comments: true
       share: true
       related: true
-      excerpt: true
+      # excerpt: true
       sidebar:
         nav: "docs"
 

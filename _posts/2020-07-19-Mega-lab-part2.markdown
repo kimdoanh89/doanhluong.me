@@ -7,6 +7,10 @@ categories: mega-lab
 toc: true
 toc_label: "On This Post"
 toc_sticky: true
+tags:
+  - content
+  - excerpt
+  - layout
 ---
 From the previous post, we have set up the initial topology with around 10 
 routers. We manually configured EIGRP routing, SSH connection on each router. 
