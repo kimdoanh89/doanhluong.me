@@ -59,37 +59,54 @@ ls
 cat vManage.crt
 - Copy the content of vManage.crt and install the certificate 
 
----------------- Adding vBond controller------------------------------
-- in vBond vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+### 3.2. Adding vBond controller
+In vBond vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+```bash
 vim SDWAN.crt
 vim SDWAN.key
+```
+
 - Configuration > Devices > Controllers > Add Controller
 - Configuration > Certificates > Controller > vBond > View CSR
-- Copy the content to vBond.csr
+  - Copy the content to vBond.csr
 - Sign vBond.csr using openssl andd generate vBond.crt
+```bash
 openssl x509 -req -in vBond.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
 cat vSmart.crt
+```
+
 - Copy the content of vSmart.crt and install the certificate 
 
----------------- Adding vSmart controller------------------------------
-- in vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+### 3.2. Adding vSmart controller
+In vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+```bash
 vim SDWAN.crt
 vim SDWAN.key
+```
+
 - Configuration > Devices > Controllers > Add Controller
 - Configuration > Certificates > Controller > vSmart > View CSR
-- Copy the content to vSmart.csr
+  - Copy the content to vSmart.csr
 - Sign vSmart.csr using openssl abd generate vSmart.crt
+```bash
 openssl x509 -req -in vSmart.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vSmart.crt -days 2000 -sha256
 cat vSmart.crt
+```
+
 - Copy the content of vSmart.crt and install the certificate
------------------Enable tunnel-interface-----------------
-- vManage + vSmart
+### 3.3. Enable tunnel-interface
+In vManage + vSmart
+```bash
 vpn 0
  int eth1
   tunnel-interface
+```
 
-- vBond
+
+In vBond
+```bash
 vpn 0
  int ge0/0
   tunnel-interface
    encapsulation ipsec
+```
