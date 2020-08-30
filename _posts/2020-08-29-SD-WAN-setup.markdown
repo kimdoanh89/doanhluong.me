@@ -39,14 +39,17 @@ openssl req -x509 -new -nodes -key SDWAN.key -sha256 -days 2000 \
 ls
 cat SDWAN.pem
 ```
-- copy `SDWAN.pem` content to Administration > Settings > Controller Certification Authorization > Enterprise Root Certificate
+
+copy `SDWAN.pem` content to Administration > Settings > Controller Certification Authorization > Enterprise Root Certificate
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/01_SDWAN-pem.png" %}
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/02_controller-certificate-authorization-2.png" %}
 
-- go to https://192.168.100.130/dataservice/system/device/sync/rootcertchain to to request a resync of the vManage 
-database via API call. The answer in JSON format should be: `{"syncRootCertChain":"done"}`.
+From the browser, go to 
+https://192.168.100.130/dataservice/system/device/sync/rootcertchain to request a 
+resync of the vManage database via API call. The answer in JSON format 
+should be: `{"syncRootCertChain":"done"}`.
 - create Certificate Signing Request (CSR): Configuration > Certificates > Controllers > Generate CSR
 - copy the CSR content, go back to vManage `vshell` mode and create vManage.csr
 - sign CSR using openssl
