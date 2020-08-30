@@ -10,7 +10,6 @@ toc_sticky: true
 ---
 In this post, we will set up an Ansible playbook to collect some information
 from hosts and save the outputs to different files depending on the hostname.
-
 The following steps show how to setup and run an Ansible playbook:
 - Creating the inventory file
 - Modifying the `ansible.cfg`

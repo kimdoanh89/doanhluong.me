@@ -16,9 +16,7 @@ From the previous post, we have set up the initial topology with around 10
 routers. We manually configured EIGRP routing, SSH connection on each router. 
 We also configured the DHCP server settings on the Ubuntu control station. 
 Using that, when a new router is added to the topology, it will receive a 
-static IP address based on hostname from the DHCP server.
-
-However, the DHCP server configuration file is only for 10 routers. We need
+static IP address based on hostname from the DHCP server. However, the DHCP server configuration file is only for 10 routers. We need
 to use Python and jinja2 template to automatically generate DHCP server
 configurations for 1000 routers.
 
