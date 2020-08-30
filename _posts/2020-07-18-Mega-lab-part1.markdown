@@ -53,6 +53,9 @@ We set up the topology with the following details in mind.
 
 Our goal is to automate the Zero Touch Provision to bring up the lab, as can
 be seen in the following demo.
+- Automatically add routers to the topology using GNS3 APIs.
+- Set up the DHCP server, so that when each router is added and started up, it will receive
+an assigned IP address based on router name, and where it is connected in the network.
 
 {% include figure image_path="/assets/02_mega_lab/images/00_ZTP_mega-lab2.gif" %}
 
