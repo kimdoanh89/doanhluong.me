@@ -10,8 +10,8 @@ toc_sticky: true
 In this post, we will go through all the steps of how to configure the CISCO SD-WAN lab in 
 GNS3. 
 
-## 1. Lab Topology
-The topology in GNS3 is as in the figure below.
+## 1. Initial Lab Topology
+The initial topology in GNS3 is as in the figure below.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_lab_topology.png" %}
 
@@ -45,7 +45,7 @@ vmanage#
 
 You can find the best sdwan command cheatsheet [here](https://codingpackets.com/blog/cisco-sdwan-command-comparison-cheat-sheet/).
 
-## 2. Configuration
+## 2. Control plane Configuration
 In this lab, we will start by configuring the root CA. The root CA is configured in the vManage
 device to simplify the topology. Next we move onto installing certificate on each Viptela 
 device, including vManage, vBond, vSmart.
@@ -147,3 +147,68 @@ vpn 0
   tunnel-interface
    encapsulation ipsec
 ```
+## 3. Extend initial topology with more sites
+### 3.1. Extend topology
+
+### 3.2. Adding Border Router
+### 3.3. Upload the WAN Edge list
+Go to `Configuration > Devices` and click `Upload WAN Edge List`. After uploading the WAN 
+Edge List, you’ll see your devices in `Configuration > Devices`.  You will need to valid 
+the edge device by clicking the `Validate` column.
+### 3.4. Adding vEdge1 node
+We will add vEdge1 of site-id 1 to the topology. The boostrap configuration is as follows:
+```bash
+system
+ host-name               vEdge1
+ system-ip               2.2.2.1
+ site-id                 1
+ admin-tech-on-failure
+ no route-consistency-check
+ organization-name       SD-WAN-DOANH
+ vbond 10.10.1.3
+vpn 0
+ interface ge0/0
+  ip address 172.19.0.11/16
+  ipv6 dhcp-client
+  tunnel-interface
+   encapsulation ipsec
+  !
+  no shutdown
+ !
+ interface ge0/1
+  ip address 172.18.0.11/16
+  no shutdown
+ !
+ ip route 0.0.0.0/0 172.19.0.1
+!
+```
+
+We will need to copy the content of SDWAN.pem from vManage to vEdge1. In vEdge1, paste the
+content of SDWAN.pem to a new empty file.
+```bash
+vEdge1# vshell
+vEdge1:~$ vim SDWAN.pem
+vEdge1:~$ exit         
+vEdge1# 
+```
+Now, we can import the certificate.
+```bash
+request root-cert-chain install /home/admin/SDWAN.pem
+```
+
+Go to vManage interface, `Configuration > Devices > Select unused entry > ... > Generate Bootstrap
+Configuration`.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/05_generate_bootstrap_configuration.png" %}
+
+```bash
+request vedge-cloud activate chassis-number 26e25eef-2ec0-94e4-5b6e-d3512f8ca2fb token 5726ba8c152b416eb804be6ba150cf30
+```
+
+Check with `show control local-properties`
+### 3.5. Adding vEdge3 node
+```bash
+request vedge-cloud activate chassis-number 5997295d-c718-3109-6277-08b4caea2bcf token 764fa250066c4e90bb994ce60994bf90
+```
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/06_registered.png" %}
