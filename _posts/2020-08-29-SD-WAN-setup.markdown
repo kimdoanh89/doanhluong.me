@@ -7,15 +7,21 @@ toc: true
 toc_label: "On This Post"
 toc_sticky: true
 ---
-## 1. Introduction
+In this post, we will go through all the steps of how to configure the CISCO SD-WAN lab in 
+GNS3. 
 
-## 2. Lab Topology
+## 1. Lab Topology
 The topology in GNS3 is as in the figure below.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_lab_topology.png" %}
 
+We set up the topology with the following details in mind.
 
-### 2.1. Lab Software
+- Networks in host machine, created by VMware:
+  - Host-only: VMnet1 - 192.168.134.0/24
+  - NAT: VMnet8 - 192.168.100.0/24
+
+### 1.1. Lab Software
 
 - GNS3 version 2.2.12
 - VMware® Workstation 15 Pro
@@ -24,7 +30,7 @@ The topology in GNS3 is as in the figure below.
 - vSmart - 20.3.1
 - vEdge - 20.3.1
 
-### 2.2. Viptela CLI modes
+### 1.2. Viptela CLI modes
 There are two cli modes in Viptela device software: `viptela-cli` and `vshell`. When you 
 login to a Viptela device terminal, you are placed  in the `viptela-cli` mode. To enter 
 the `vshell` mode, using the command  `vshell`, and `exit` to return back to `viptela-cli` 
@@ -39,11 +45,11 @@ vmanage#
 
 You can find the best sdwan command cheatsheet [here](https://codingpackets.com/blog/cisco-sdwan-command-comparison-cheat-sheet/).
 
-## 3. Configuration
+## 2. Configuration
 In this lab, we will start by configuring the root CA. The root CA is configured in the vManage
 device to simplify the topology. Next we move onto installing certificate on each Viptela 
-devices, including vManage, vBond, v
-### 3.1. vManage
+device, including vManage, vBond, vSmart.
+### 2.1. vManage
 
 Certificate Authority in vManage, generate key and certificate. In vManage `vshell` mode:
 ```bash
@@ -85,7 +91,7 @@ cat vManage.crt
 
 - Copy the content of vManage.crt and install the certificate 
 
-### 3.2. Adding vBond controller
+### 2.2. Adding vBond controller
 In vBond vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
 ```bash
 vim SDWAN.crt
@@ -104,7 +110,7 @@ cat vBond.crt
 
 - Copy the content of vBond.crt and install the certificate 
 
-### 3.2. Adding vSmart controller
+### 2.3. Adding vSmart controller
 In vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
 
 ```bash
@@ -124,7 +130,7 @@ cat vSmart.crt
 
 - Copy the content of vSmart.crt and install the certificate
 
-### 3.3. Enable tunnel-interface
+### 2.4. Enable tunnel-interface
 
 In vManage + vSmart
 ```bash
