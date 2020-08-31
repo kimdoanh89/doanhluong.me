@@ -54,13 +54,6 @@ device, including vManage, vBond, vSmart.
 Certificate Authority in vManage, generate key and certificate. In vManage `vshell` mode:
 ```bash
 openssl genrsa -out SDWAN.key 2048
-openssl req -new -x509 -days 2000 -key SDWAN.key -out SDWAN.crt
-```
-
-{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/02_controller-certificate-authorization.png" %}
-
-Self-signed the certificate
-```bash
 openssl req -x509 -new -nodes -key SDWAN.key -sha256 -days 2000 \
         -subj "/C=UK/ST=LD/L=LD/O=SD-WAN-DOANH/CN=SD-WAN" \
         -out SDWAN.pem
@@ -84,7 +77,7 @@ should be: `{"syncRootCertChain":"done"}`.
 - sign CSR using openssl
 
 ```bash
-openssl x509 -req -in vManage.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vManage.crt -days 2000 -sha256
+openssl x509 -req -in vManage.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vManage.crt -days 2000 -sha256
 ls
 cat vManage.crt
 ```
@@ -104,7 +97,7 @@ vim SDWAN.key
 - Sign vBond.csr using openssl andd generate vBond.crt
 
 ```bash
-openssl x509 -req -in vBond.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
+openssl x509 -req -in vBond.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
 cat vBond.crt
 ```
 
@@ -124,7 +117,7 @@ vim SDWAN.key
 - Sign vSmart.csr using openssl abd generate vSmart.crt
 
 ```bash
-openssl x509 -req -in vSmart.csr -CA SDWAN.crt -CAkey SDWAN.key -CAcreateserial -out vSmart.crt -days 2000 -sha256
+openssl x509 -req -in vSmart.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vSmart.crt -days 2000 -sha256
 cat vSmart.crt
 ```
 
