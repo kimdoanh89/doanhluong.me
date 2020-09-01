@@ -31,7 +31,7 @@ I have the Dell Desktop XPS 8390 with 32GB RAM 12vCPUs and allocate 16GB RAM and
 - vBond is 2GB RAM, 1 vCPU, no required storage. 
 
 The other nodes: 
-- Border Router: CSR1k - 3GB RAM, 1 vCPU; 
+- Border Router: CSR1000v - 3GB RAM, 1 vCPU; 
 - 2 vEdges router: 2 GB RAM and 1 vCPU each. 
 
 When the full lab is  running the gsn3 VM CPU 28.5%; RAM 85.9%. 
@@ -53,9 +53,12 @@ management.
 
 | Host    | VPN 512 (mgmt)       | VPN 0 (control)                                   |
 |---------|----------------------|---------------------------------------------------|
-| vManage | eth0 - 172.16.1.1/24 | eth1 - 10.10.1.1/24;<br>eth2 - 192.168.134.147/24 |
+| vManage | eth0 - 172.16.1.1/24 | eth1 - 10.10.1.1/24;<br>eth2 - 192.168.134.138/24 |
 | vSmart  | eth0 - 172.16.1.2/24 | eth1 - 10.10.1.2/24                               |
 | vBond   | eth0 - 172.16.1.3/24 | Ge0/0 - 10.10.1.3/24                              |
+
+Note that, vManage has `eth2` that connects it with the host machine through VMnet8, so that
+we can connect to the vManage web interface using the IP address: 192.168.134.138.
 
 ### 1.4. Viptela CLI modes
 There are two cli modes in Viptela device software: `viptela-cli` and `vshell`. When you 
@@ -72,13 +75,59 @@ vmanage#
 
 You can find the best sdwan command cheatsheet [here](https://codingpackets.com/blog/cisco-sdwan-command-comparison-cheat-sheet/).
 
-## 2. Control plane Configuration
+## 2. Control plane devices configuration
 In this lab, we will start by configuring the root CA. The root CA is configured in the vManage
 device to simplify the topology. Next we move onto installing certificate on each Viptela 
 device, including vManage, vBond, vSmart.
-### 2.1. vManage
 
-Certificate Authority in vManage, generate key and certificate. In vManage `vshell` mode:
+### 2.1. vManage
+We need to spin up vManage in GNS3. During this step, we can set up the user and password to 
+log into vManage (`admin/admin`) and configure the boostrap configuration in configuration mode
+`conf t`.
+
+```bash
+system
+ host-name             vmanage
+ system-ip             1.1.1.1
+ site-id               1000
+ admin-tech-on-failure
+ sp-organization-name  SD-WAN-DOANH
+ organization-name     SD-WAN-DOANH
+ vbond 10.10.1.3
+vpn 0
+ interface eth1
+  ip address 10.10.1.1/24
+  tunnel-interface
+  !
+  no shutdown
+ !
+ interface eth2
+  ip dhcp-client
+  no shutdown
+ !
+ ip route 0.0.0.0/0 10.10.1.254
+!
+vpn 512
+ interface eth0
+  ip address 172.16.1.1/24
+  no shutdown
+ !
+!
+```
+
+Note that, IP address of `eth2` is assigned by the DHCP server of VMnet8. To check using 
+`sh int | tab`.
+
+Now, we can access the vManage web interface with a web browser at `https://192.168.134.138:8444/`.
+Then we need to set the Organization name and vBond IP address in vManage Web Interface.
+
+Going to `Administration > Settings` as set the organization name and vBond as in the figure 
+below.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_organization_name.png" %}
+
+To configure the Certificate Authority in vManage, generate key and certificate. In vManage 
+`vshell` mode:
 ```bash
 openssl genrsa -out SDWAN.key 2048
 openssl req -x509 -new -nodes -key SDWAN.key -sha256 -days 2000 \
@@ -88,20 +137,25 @@ ls
 cat SDWAN.pem
 ```
 
-Copy `SDWAN.pem` content to Administration > Settings > Controller Certification 
-Authorization > Enterprise Root Certificate.
+Copy `SDWAN.pem` content to `Administration > Settings > Controller Certification 
+Authorization > Enterprise Root Certificate`.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/01_SDWAN-pem.png" %}
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/02_controller-certificate-authorization-2.png" %}
 
 From the browser, go to 
-https://192.168.100.130/dataservice/system/device/sync/rootcertchain to request a 
+https://192.168.134.138/dataservice/system/device/sync/rootcertchain to request a 
 resync of the vManage database via API call. The answer in JSON format 
 should be: `{"syncRootCertChain":"done"}`.
-- create Certificate Signing Request (CSR): Configuration > Certificates > Controllers > Generate CSR
-- copy the CSR content, go back to vManage `vshell` mode and create vManage.csr
-- sign CSR using openssl
+
+We need to create Certificate Signing Request (CSR): 
+`Configuration > Certificates > Controllers > Generate CSR`.
+
+Copy the CSR content, go back to vManage `vshell` mode and create an empty file vManage.csr, and
+paste the copied content to this file, save it.
+
+Sign the vManage.csr with the CA certificate and key using openssl:
 
 ```bash
 openssl x509 -req -in vManage.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vManage.crt -days 2000 -sha256
@@ -109,12 +163,56 @@ ls
 cat vManage.crt
 ```
 
-- Copy the content of vManage.crt and install the certificate 
+Copy the content of vManage.crt and install the certificate at 
+`Configuration > Certificates > Controllers > Select vManage > Install Certificate`.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/03_vManage-crt-install.png" %}
+
+Successful certificate install log:
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/03_vManage-crt-success.png" %}
 
 ### 2.2. Adding vBond controller
-In vBond vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+First, we spin up vBond in GNS3. During this step, we can set up the user and password to 
+log into vBond (`admin/admin`) and configure the boostrap configuration in configuration mode
+`conf t`.
+
 ```bash
-vim SDWAN.crt
+system
+ host-name               vbond
+ system-ip               1.1.1.3
+ site-id                 1000
+ admin-tech-on-failure
+ no route-consistency-check
+ organization-name       SD-WAN-DOANH
+ vbond 10.10.1.3 local vbond-only
+vpn 0
+ interface ge0/0
+  ip address 10.10.1.3/24
+  ipv6 dhcp-client
+  tunnel-interface
+   encapsulation ipsec
+  !
+  no shutdown
+ !
+ ip route 0.0.0.0/0 10.10.1.254
+!
+vpn 512
+ interface eth0
+  ip address 172.16.1.3/24
+  no shutdown
+ !
+!
+```
+
+Now, we need to copy the SDWAN.pem and SDWAN.key from vManage to vBond and use them to authenticate
+vBond with vManage. Go to vManage `vshell` mode, use `cat SDWAN.pem` and `cat SDWAN.key`, then 
+copy the content of these two files.
+
+In vBond `vshell` mode, paste the content of SDWAN.pem and SDWAN.key from vManage in the two
+empty files SDWAN.pem and SDWAN.key with `vim` command.
+```bash
+vim SDWAN.pem
 vim SDWAN.key
 ```
 
@@ -150,23 +248,6 @@ cat vSmart.crt
 
 - Copy the content of vSmart.crt and install the certificate
 
-### 2.4. Enable tunnel-interface
-
-In vManage + vSmart
-```bash
-vpn 0
- int eth1
-  tunnel-interface
-```
-
-
-In vBond
-```bash
-vpn 0
- int ge0/0
-  tunnel-interface
-   encapsulation ipsec
-```
 ## 3. Extend initial topology with more sites
 ### 3.1. Extend topology
 The extended topology is as in the following figure.
