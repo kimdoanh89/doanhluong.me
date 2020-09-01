@@ -8,18 +8,11 @@ toc_label: "On This Post"
 toc_sticky: true
 ---
 In this post, we will go through all the steps of how to configure the CISCO SD-WAN lab in 
-GNS3. 
+GNS3. This includes of two main parts: 
+- Setting up the Initial Topology for the control plane devices: vManage, vBond, and vSmart.
+- Extend the initial lab by adding some more sites.
 
-## 1. Initial Lab Topology
-The initial topology in GNS3 is as in the figure below.
-
-{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_lab_topology.png" %}
-
-We set up the topology with the following details in mind.
-
-- Networks in host machine, created by VMware:
-  - Host-only: VMnet1 - 192.168.134.0/24
-  - NAT: VMnet8 - 192.168.100.0/24
+## 1. Software/hardware requirements and initial topology
 
 ### 1.1. Lab Software
 
@@ -30,7 +23,28 @@ We set up the topology with the following details in mind.
 - vSmart - 20.3.1
 - vEdge - 20.3.1
 
-### 1.2. Viptela CLI modes
+### 1.2. Hardware requirements
+
+The initial topology in GNS3 is as in the figure below.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_lab_topology.png" %}
+
+We set up the topology with the following details in mind.
+
+- Networks in host machine, created by VMware:
+  - Host-only: VMnet1 - 192.168.134.0/24
+  - NAT: VMnet8 - 192.168.100.0/24
+
+We need to group the interfaces into 2 different VPNs: VPN 0 for control and VPN 512 for 
+management.
+
+| Host    | VPN 512 (mgmt) | VPN 0 (control) |
+|---------|----------------|-----------------|
+| vManage | 172.16.1.1/24  | 10.10.1.1/24    |
+| vSmart  | 172.16.1.2/24  | 10.10.1.2/24    |
+| vBond   | 172.16.1.3/24  | 10.10.1.3/24    |
+
+### 1.3. Viptela CLI modes
 There are two cli modes in Viptela device software: `viptela-cli` and `vshell`. When you 
 login to a Viptela device terminal, you are placed  in the `viptela-cli` mode. To enter 
 the `vshell` mode, using the command  `vshell`, and `exit` to return back to `viptela-cli` 
