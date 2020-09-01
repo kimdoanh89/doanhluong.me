@@ -24,6 +24,19 @@ GNS3. This includes of two main parts:
 - vEdge - 20.3.1
 
 ### 1.2. Hardware requirements
+I have the Dell Desktop XPS 8390 with 32GB RAM 12vCPUs and allocate 16GB RAM and
+ 8 vCPUs for the GNS3 VM to spin up this basic SD-WAN lab. In this lab: 
+- vManage is 12 GB RAM, 2 vCPUs, 30 GB storage; 
+- vSmart is 4 GB RAM, 1 vCPU, no required storage; 
+- vBond is 2GB RAM, 1 vCPU, no required storage. 
+
+The other nodes: 
+- Border Router: CSR1k - 3GB RAM, 1 vCPU; 
+- 2 vEdges router: 2 GB RAM and 1 vCPU each. 
+
+When the full lab is  running the gsn3 VM CPU 28.5%; RAM 85.9%. 
+
+### 1.3. Initial Topology 
 
 The initial topology in GNS3 is as in the figure below.
 
@@ -44,7 +57,7 @@ management.
 | vSmart  | 172.16.1.2/24  | 10.10.1.2/24    |
 | vBond   | 172.16.1.3/24  | 10.10.1.3/24    |
 
-### 1.3. Viptela CLI modes
+### 1.4. Viptela CLI modes
 There are two cli modes in Viptela device software: `viptela-cli` and `vshell`. When you 
 login to a Viptela device terminal, you are placed  in the `viptela-cli` mode. To enter 
 the `vshell` mode, using the command  `vshell`, and `exit` to return back to `viptela-cli` 
@@ -156,8 +169,26 @@ vpn 0
 ```
 ## 3. Extend initial topology with more sites
 ### 3.1. Extend topology
+The extended topology is as in the following figure.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/08_extend_topo.png" %}
 
 ### 3.2. Adding Border Router
+```bash
+hostname R1
+interface GigabitEthernet1
+ ip address 10.10.1.254 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet2
+ ip address 172.19.0.1 255.255.0.0
+ no shutdown
+!
+interface GigabitEthernet3
+ ip address 172.18.0.1 255.255.0.0
+ no shutdown
+!
+```
 ### 3.3. Upload the WAN Edge list
 Go to `Configuration > Devices` and click `Upload WAN Edge List`. After uploading the WAN 
 Edge List, you’ll see your devices in `Configuration > Devices`.  You will need to valid 
@@ -190,8 +221,10 @@ vpn 0
 !
 ```
 
-We will need to copy the content of SDWAN.pem from vManage to vEdge1. In vEdge1, paste the
-content of SDWAN.pem to a new empty file.
+We will need to copy the content of SDWAN.pem from vManage to vEdge1. In vEdge1, 
+go to `vshell` mode, create a empty file with `vim SDWAN.pem`, then paste the copied content,
+`exit` to return back to the `viptela-cli` mode.
+
 ```bash
 vEdge1# vshell
 vEdge1:~$ vim SDWAN.pem
@@ -204,7 +237,8 @@ request root-cert-chain install /home/admin/SDWAN.pem
 ```
 
 Go to vManage interface, `Configuration > Devices > Select unused entry > ... > Generate Bootstrap
-Configuration`.
+Configuration`, to see the boostrap information, what we need is the UUID and token to be used
+in the next command.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/05_generate_bootstrap_configuration.png" %}
 
@@ -212,10 +246,16 @@ Configuration`.
 request vedge-cloud activate chassis-number 26e25eef-2ec0-94e4-5b6e-d3512f8ca2fb token 5726ba8c152b416eb804be6ba150cf30
 ```
 
-Check with `show control local-properties`
+Check with `show control local-properties`.
 ### 3.5. Adding vEdge3 node
+Repeat the same process as with vEdge1:
+
 ```bash
+request root-cert-chain install /home/admin/SDWAN.pem
 request vedge-cloud activate chassis-number 5997295d-c718-3109-6277-08b4caea2bcf token 764fa250066c4e90bb994ce60994bf90
 ```
+
+Verify by going to `Monitor > Network`, note that there are two more vEdges that have been
+recognized by vManage.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/06_registered.png" %}
