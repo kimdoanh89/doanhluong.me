@@ -121,7 +121,7 @@ Note that, IP address of `eth2` is assigned by the DHCP server of VMnet8. To che
 Now, we can access the vManage web interface with a web browser at `https://192.168.134.138:8444/`.
 Then we need to set the Organization name and vBond IP address in vManage Web Interface.
 
-Going to `Administration > Settings` as set the organization name and vBond as in the figure 
+Going to `Administration > Settings` and set the organization name and vBond as in the figure 
 below.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_organization_name.png" %}
@@ -149,11 +149,11 @@ https://192.168.134.138/dataservice/system/device/sync/rootcertchain to request 
 resync of the vManage database via API call. The answer in JSON format 
 should be: `{"syncRootCertChain":"done"}`.
 
-We need to create Certificate Signing Request (CSR): 
+We need to create Certificate Signing Request (CSR) in vManage Web interface: 
 `Configuration > Certificates > Controllers > Generate CSR`.
 
-Copy the CSR content, go back to vManage `vshell` mode and create an empty file vManage.csr, and
-paste the copied content to this file, save it.
+Copy the CSR content, go back to vManage `vshell` mode, create an empty file vManage.csr with
+`vim vManage.csr`, then paste the copied content to this file, save it.
 
 Sign the vManage.csr with the CA certificate and key using openssl:
 
@@ -163,7 +163,7 @@ ls
 cat vManage.crt
 ```
 
-Copy the content of vManage.crt and install the certificate at 
+Copy the content of vManage.crt and install the certificate at vManage web interface
 `Configuration > Certificates > Controllers > Select vManage > Install Certificate`.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/03_vManage-crt-install.png" %}
@@ -216,17 +216,20 @@ vim SDWAN.pem
 vim SDWAN.key
 ```
 
-- Configuration > Devices > Controllers > Add Controller
-- Configuration > Certificates > Controller > vBond > View CSR
+Now, we need to add the vBond controller in vManage web interface 
+ `Configuration > Devices > Controllers > Add Controller`.
+ 
+- View the CSR at `Configuration > Certificates > Controller > vBond > View CSR`
   - Copy the content to vBond.csr
-- Sign vBond.csr using openssl andd generate vBond.crt
+- Sign vBond.csr using openssl and generate vBond.crt
 
 ```bash
 openssl x509 -req -in vBond.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
 cat vBond.crt
 ```
 
-- Copy the content of vBond.crt and install the certificate 
+Copy the content of vBond.crt and install the certificate at vManage web interface
+`Configuration > Certificates > Controllers > Select vBond > Install Certificate`.
 
 ### 2.3. Adding vSmart controller
 In vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
