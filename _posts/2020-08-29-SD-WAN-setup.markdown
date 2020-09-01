@@ -230,7 +230,11 @@ Now, we need to add the vBond controller in vManage web interface
 
  
 - View the CSR at `Configuration > Certificates > Controller > vBond > View CSR`
-  - Copy the content to vBond.csr
+  - Copy the content of the CSR
+  - Go back to vBond `vshell` mode and paste to vBond.csr
+  
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/04-view-vBond-CSR.png" %}
+
 - Sign vBond.csr using openssl and generate vBond.crt
 
 ```bash
@@ -279,7 +283,8 @@ Add the vSmart controller in vManage web interface at
 `Configuration > Devices > Controllers > Add Controller`.
 
 - View the CSR at `Configuration > Certificates > Controller > vSmart > View CSR`
-  - Copy the content to vSmart.csr
+  - Copy the content of the CSR
+  - Go back to vSmart `vshell` mode and paste to vSmart.csr
 - Sign vSmart.csr using openssl abd generate vSmart.crt
 
 ```bash
