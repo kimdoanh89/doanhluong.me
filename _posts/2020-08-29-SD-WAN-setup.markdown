@@ -81,6 +81,7 @@ device to simplify the topology. Next we move onto installing certificate on eac
 device, including vManage, vBond, vSmart.
 
 ### 2.1. vManage
+#### Boostrap configuration
 We need to spin up vManage in GNS3. During this step, we can set up the user and password to 
 log into vManage (`admin/admin`) and configure the boostrap configuration in configuration mode
 `conf t`.
@@ -126,6 +127,7 @@ below.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/00_organization_name.png" %}
 
+#### Configure root CA in vManage
 To configure the Certificate Authority in vManage, generate key and certificate. In vManage 
 `vshell` mode:
 ```bash
@@ -149,6 +151,7 @@ https://192.168.134.138/dataservice/system/device/sync/rootcertchain to request 
 resync of the vManage database via API call. The answer in JSON format 
 should be: `{"syncRootCertChain":"done"}`.
 
+#### Install the certificate
 We need to create Certificate Signing Request (CSR) in vManage Web interface: 
 `Configuration > Certificates > Controllers > Generate CSR`.
 
@@ -173,6 +176,7 @@ Successful certificate install log:
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/03_vManage-crt-success.png" %}
 
 ### 2.2. Adding vBond controller
+#### Boostrap configuration
 First, we spin up vBond in GNS3. During this step, we can set up the user and password to 
 log into vBond (`admin/admin`) and configure the boostrap configuration in configuration mode
 `conf t`.
@@ -205,6 +209,7 @@ vpn 512
 !
 ```
 
+#### Install the certificate
 Now, we need to copy the SDWAN.pem and SDWAN.key from vManage to vBond and use them to authenticate
 vBond with vManage. Go to vManage `vshell` mode, use `cat SDWAN.pem` and `cat SDWAN.key`, then 
 copy the content of these two files.
@@ -232,15 +237,43 @@ Copy the content of vBond.crt and install the certificate at vManage web interfa
 `Configuration > Certificates > Controllers > Select vBond > Install Certificate`.
 
 ### 2.3. Adding vSmart controller
-In vSmart vshell mode, copy the content of SDWAN.crt and SDWAN.key from vManage
+#### Boostrap configuration
+```bash
+system
+ host-name             vsmart
+ system-ip             1.1.1.2
+ site-id               1000
+ admin-tech-on-failure
+ organization-name     SD-WAN-DOANH
+ vbond 10.10.1.3
+vpn 0
+ interface eth1
+  ip address 10.10.1.2/24
+  tunnel-interface
+  !
+  no shutdown
+ !
+ ip route 0.0.0.0/0 10.10.1.254
+!
+vpn 512
+ interface eth0
+  ip address 172.16.1.2/24
+  no shutdown
+ !
+!
+```
+#### Install the certificate
+In vSmart `vshell` mode, paste the content of SDWAN.pem and SDWAN.key from vManage
 
 ```bash
-vim SDWAN.crt
+vim SDWAN.pem
 vim SDWAN.key
 ```
 
-- Configuration > Devices > Controllers > Add Controller
-- Configuration > Certificates > Controller > vSmart > View CSR
+Add the vSmart controller in vManage web interface at 
+`Configuration > Devices > Controllers > Add Controller`.
+
+- View the CSR at `Configuration > Certificates > Controller > vSmart > View CSR`
   - Copy the content to vSmart.csr
 - Sign vSmart.csr using openssl abd generate vSmart.crt
 
@@ -249,7 +282,8 @@ openssl x509 -req -in vSmart.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial 
 cat vSmart.crt
 ```
 
-- Copy the content of vSmart.crt and install the certificate
+- Copy the content of vSmart.crt and install the certificate at vManage web interface
+`Configuration > Certificates > Controllers > Select vSmart > Install Certificate`.
 
 ## 3. Extend initial topology with more sites
 ### 3.1. Extend topology
@@ -274,10 +308,23 @@ interface GigabitEthernet3
 !
 ```
 ### 3.3. Upload the WAN Edge list
-Go to `Configuration > Devices` and click `Upload WAN Edge List`. After uploading the WAN 
-Edge List, you’ll see your devices in `Configuration > Devices`.  You will need to valid 
-the edge device by clicking the `Validate` column.
+At this step, we will need an valid WAN Edge List. You can go to the 
+[poc::v:lab](https://pocvlab.com/cisco-sd-wan-vedges-licensing-and-onboarding/) site for 
+more information of how to get this list.
+
+Go to `Configuration > Devices` and click `Upload WAN Edge List`. 
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/06_edge_list.png" %}
+
+After uploading the WAN Edge List, you’ll see your devices in `Configuration > Devices`.  
+
+You will need to valid the edge device by going to `Configuration > Certifcates > WAN Edge List`
+ and click `valid` under the `Validate` column.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/06_edge_valid.png" %}
+
 ### 3.4. Adding vEdge1 node
+#### Bootstrap configuration
 We will add vEdge1 of site-id 1 to the topology. The boostrap configuration is as follows:
 ```bash
 system
@@ -304,7 +351,7 @@ vpn 0
  ip route 0.0.0.0/0 172.19.0.1
 !
 ```
-
+#### Install the certificate
 We will need to copy the content of SDWAN.pem from vManage to vEdge1. In vEdge1, 
 go to `vshell` mode, create a empty file with `vim SDWAN.pem`, then paste the copied content,
 `exit` to return back to the `viptela-cli` mode.
@@ -332,6 +379,40 @@ request vedge-cloud activate chassis-number 26e25eef-2ec0-94e4-5b6e-d3512f8ca2fb
 
 Check with `show control local-properties`.
 ### 3.5. Adding vEdge3 node
+#### Boostrap configuration
+```bash
+system
+ host-name               vEdge3
+ system-ip               2.2.2.3
+ site-id                 3
+ admin-tech-on-failure
+ no route-consistency-check
+ organization-name       SD-WAN-DOANH
+ vbond 10.10.1.3
+vpn 0
+ interface ge0/0
+  ip address 172.19.0.31/16
+  ipv6 dhcp-client
+  tunnel-interface
+   encapsulation ipsec
+  !
+  no shutdown
+ !
+ interface ge0/1
+  ip address 172.18.0.31/16
+  no shutdown
+ !
+ ip route 0.0.0.0/0 172.19.0.1
+!
+vpn 512
+ interface eth0
+  ip dhcp-client
+  ipv6 dhcp-client
+  no shutdown
+ !
+!
+```
+#### Install the certificate
 Repeat the same process as with vEdge1:
 
 ```bash
@@ -343,3 +424,10 @@ Verify by going to `Monitor > Network`, note that there are two more vEdges that
 recognized by vManage.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/06_registered.png" %}
+
+## 4. Conclusion
+
+In this lab, we went through all the steps to configure the basic SD-WAN in GNS3. Now, everything
+is up and running. Let's grab an SD-WAN book, study hard, and check the knowledge with this lab.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/07_RG.png" %}
