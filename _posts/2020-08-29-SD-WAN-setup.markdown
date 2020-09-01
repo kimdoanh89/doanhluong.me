@@ -223,6 +223,11 @@ vim SDWAN.key
 
 Now, we need to add the vBond controller in vManage web interface 
  `Configuration > Devices > Controllers > Add Controller`.
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/04-add-vBond.png" %}
+
+{% include figure image_path="/assets/03_SD-WAN/00_Setup/images/04-add-vBond-2.png" %}
+
  
 - View the CSR at `Configuration > Certificates > Controller > vBond > View CSR`
   - Copy the content to vBond.csr
