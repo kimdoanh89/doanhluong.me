@@ -38,11 +38,11 @@ We set up the topology with the following details in mind.
 We need to group the interfaces into 2 different VPNs: VPN 0 for control and VPN 512 for 
 management.
 
-| Host    | VPN 512 (mgmt) | VPN 0 (control) |
-|---------|----------------|-----------------|
-| vManage | 172.16.1.1/24  | 10.10.1.1/24    |
-| vSmart  | 172.16.1.2/24  | 10.10.1.2/24    |
-| vBond   | 172.16.1.3/24  | 10.10.1.3/24    |
+| Host    | VPN 512 (mgmt)       | VPN 0 (control)                                   |
+|---------|----------------------|---------------------------------------------------|
+| vManage | eth0 - 172.16.1.1/24 | eth1 - 10.10.1.1/24;<br>eth2 - 192.168.134.147/24 |
+| vSmart  | eth0 - 172.16.1.2/24 | eth1 - 10.10.1.2/24                               |
+| vBond   | eth0 - 172.16.1.3/24 | Ge0/0 - 10.10.1.3/24                              |
 
 ### 1.3. Viptela CLI modes
 There are two cli modes in Viptela device software: `viptela-cli` and `vshell`. When you 
