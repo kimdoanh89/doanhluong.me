@@ -12,6 +12,17 @@ GNS3. This includes of two main parts:
 - Setting up the Initial Topology for the control plane devices: vManage, vBond, and vSmart.
 - Extend the initial lab by adding some more sites.
 
+There are some excellent resources that I have learned a lot from when I tried to set up
+this lab:
+- Brad Searle@[codingpackets](https://codingpackets.com/)
+  - [Cisco SDWAN Self Hosted Lab Part 1](https://codingpackets.com/blog/cisco-sdwan-self-hosted-lab-part-1/)
+  - [Cisco SDWAN Self Hosted Lab Part 2](https://codingpackets.com/blog/cisco-sdwan-self-hosted-lab-part-2/)
+- Alin Iorguta@[poc::v:lab](https://pocvlab.com/)
+  - [Cisco SD-WAN. Controllers onboarding](https://pocvlab.com/cisco-sd-wan-controllers-onboarding/)
+  - [Cisco SD-WAN. Edges licensing and onboarding](https://pocvlab.com/cisco-sd-wan-vedges-licensing-and-onboarding/)
+- Jedadiah Casey@[neckercube](https://neckercube.com/)
+  - [Cisco SD-WAN: Basic Configuration Lab](https://neckercube.com/posts/2019-12-18-cisco-sdwan-basic-configuration-lab/)
+
 ## 1. Software/hardware requirements and initial topology
 
 ### 1.1. Lab Software
@@ -229,13 +240,14 @@ Now, we need to add the vBond controller in vManage web interface
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/04-add-vBond-2.png" %}
 
  
-- View the CSR at `Configuration > Certificates > Controller > vBond > View CSR`
-  - Copy the content of the CSR
-  - Go back to vBond `vshell` mode and paste to vBond.csr
+View the CSR at `Configuration > Certificates > Controller > vBond > View CSR`
+- Copy the content of the CSR
+- Go back to vBond `vshell` mode and paste to the new empty file vBond.csr with
+   `vim vBonds.csr`
   
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/04-view-vBond-CSR.png" %}
 
-- Sign vBond.csr using openssl and generate vBond.crt
+Sign vBond.csr using openssl and generate vBond.crt
 
 ```bash
 openssl x509 -req -in vBond.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vBond.crt -days 2000 -sha256
@@ -282,17 +294,17 @@ vim SDWAN.key
 Add the vSmart controller in vManage web interface at 
 `Configuration > Devices > Controllers > Add Controller`.
 
-- View the CSR at `Configuration > Certificates > Controller > vSmart > View CSR`
-  - Copy the content of the CSR
-  - Go back to vSmart `vshell` mode and paste to vSmart.csr
-- Sign vSmart.csr using openssl abd generate vSmart.crt
+View the CSR at `Configuration > Certificates > Controller > vSmart > View CSR`
+- Copy the content of the CSR
+- Go back to vSmart `vshell` mode and paste to vSmart.csr
 
+Sign vSmart.csr using openssl and generate vSmart.crt
 ```bash
 openssl x509 -req -in vSmart.csr -CA SDWAN.pem -CAkey SDWAN.key -CAcreateserial -out vSmart.crt -days 2000 -sha256
 cat vSmart.crt
 ```
 
-- Copy the content of vSmart.crt and install the certificate at vManage web interface
+Copy the content of vSmart.crt and install the certificate at vManage web interface
 `Configuration > Certificates > Controllers > Select vSmart > Install Certificate`.
 
 ## 3. Extend initial topology with more sites
