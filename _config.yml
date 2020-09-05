@@ -39,6 +39,12 @@ comments:
   disqus:
     shortname: "doanhluong"
 
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: "UA-50785858-1"
+    anonymize_ip: false # default
+
 search: true
 
 author:
