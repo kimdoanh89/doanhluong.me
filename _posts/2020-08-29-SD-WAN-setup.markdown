@@ -375,7 +375,7 @@ vpn 0
 ```
 #### Install the certificate
 We will need to copy the content of SDWAN.pem from vManage to vEdge1. In vEdge1, 
-go to `vshell` mode, create a empty file with `vim SDWAN.pem`, then paste the copied content,
+go to `vshell` mode, create an empty file with `vim SDWAN.pem`, then paste the copied content,
 `exit` to return back to the `viptela-cli` mode.
 
 ```bash
@@ -391,10 +391,15 @@ request root-cert-chain install /home/admin/SDWAN.pem
 
 Go to vManage interface, `Configuration > Devices > Select unused entry > ... > Generate Bootstrap
 Configuration`, to see the boostrap information, what we need is the UUID and token to be used
-in the next command.
+in the next command. Note that, since we use `vEdge`, the `unused entry` we select needs to 
+be of model `vEdge Cloud`.
 
 {% include figure image_path="/assets/03_SD-WAN/00_Setup/images/05_generate_bootstrap_configuration.png" %}
 
+```bash
+request vedge-cloud activate chassis-number uuid token otp
+```
+One example is as follows:
 ```bash
 request vedge-cloud activate chassis-number 26e25eef-2ec0-94e4-5b6e-d3512f8ca2fb token 5726ba8c152b416eb804be6ba150cf30
 ```
