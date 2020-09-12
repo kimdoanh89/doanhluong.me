@@ -110,7 +110,7 @@ PEER             TYPE    ID        ID        ID        STATE    UPTIME          
 1.1.1.2          vsmart  1         1         1000      up       0:07:06:48       0/0/0
 ```
 
-### TLOC-paths & TLOCS
+#### TLOC-paths & TLOCS
 In vEdge1
 ```bash
 sh omp tloc-paths
@@ -183,13 +183,13 @@ From the above table, some information that we need to notice:
 - bfd-status: up
 - site-id: 2
 
-### BFD sessions and summary
+#### BFD sessions and summary
 ```bash
 sh bfd sessions
 sh bfd summary
 ```
 
-### IPsec connections
+#### IPsec connections
 ```bash
 sh ipsec outbound-connections
 ```
