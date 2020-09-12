@@ -22,7 +22,8 @@ extended topology is as in the figure below.
 
 {% include figure image_path="/assets/03_SD-WAN/02_one_more_site/images/01_topology.png" %}
 
-#### Bootstrap configuration
+### Bootstrap configuration
+
 First, we spin up vEdge2 in GNS3. During this step, we can set up the user and password to 
 log into vEdge2 (`admin/admin`) and configure the boostrap configuration in configuration mode
 `conf t`.
@@ -50,7 +51,7 @@ vpn 0
  ip route 0.0.0.0/0 172.19.0.1
 !
 ```
-#### Install the certificate
+### Install the certificate
 We will need to copy the content of SDWAN.pem from vManage to vEdge2. In vEdge2, 
 go to `vshell` mode, create an empty file with `vim SDWAN.pem`, then paste the copied content,
 `exit` to return back to the `viptela-cli` mode.
@@ -61,6 +62,7 @@ vEdge2:~$ vim SDWAN.pem
 vEdge2:~$ exit         
 vEdge2# 
 ```
+
 Now, we can import the certificate.
 ```bash
 request root-cert-chain install /home/admin/SDWAN.pem
@@ -87,6 +89,7 @@ In vSmart
 ```bash
 sh omp peers
 ```
+
 ```bash
                          DOMAIN    OVERLAY   SITE                                
 PEER             TYPE    ID        ID        ID        STATE    UPTIME           R/I/S  
@@ -95,6 +98,7 @@ PEER             TYPE    ID        ID        ID        STATE    UPTIME          
 2.2.2.2          vedge   1         1         2         up       0:06:40:52       0/0/0
 2.2.2.3          vedge   1         1         3         up       0:07:04:22       0/0/0
 ```
+
 In vEdge1
 ```bash
 sh omp peers
@@ -105,20 +109,24 @@ PEER             TYPE    ID        ID        ID        STATE    UPTIME          
 ------------------------------------------------------------------------------------------
 1.1.1.2          vsmart  1         1         1000      up       0:07:06:48       0/0/0
 ```
+
 ### TLOC-paths & TLOCS
 In vEdge1
 ```bash
 sh omp tloc-paths
 ```
+
 ```bash
 tloc-paths entries 2.2.2.1 default ipsec
 tloc-paths entries 2.2.2.2 default ipsec
 tloc-paths entries 2.2.2.3 default ipsec
 ```
+
 tlocs
 ```bash
 sh omp tlocs
 ```
+
 ```bash
 ---------------------------------------------------
 tloc entries for 2.2.2.2
@@ -166,6 +174,7 @@ lost-to-path-id not set
      unknown-attr-len  not set
 
 ```
+
 From the above table, some information that we need to notice:
 - tloc = `system ip + color + encapsulation`. In this case, tloc = `2.2.2.2 + default + ipsec`
 - peer: 1.1.1.2 means that it receives this tloc information from the vSmart 1.1.1.2
@@ -173,15 +182,18 @@ From the above table, some information that we need to notice:
 - private-ip: if behind the NAT, should be different from public-ip
 - bfd-status: up
 - site-id: 2
+
 ### BFD sessions and summary
 ```bash
 sh bfd sessions
 sh bfd summary
 ```
+
 ### IPsec connections
 ```bash
 sh ipsec outbound-connections
 ```
+
 ## 3. Route advertising
 Two types of interfaces: transport interface and service interface
 - Transport interface
