@@ -196,8 +196,8 @@ to see this table.
 ### 4.3. Start developing `sla list` with python
 
 Now, we have all information we need:
-- The API: `GET`
-- The HTTP operation: `/template/policy/list/sla`
+- The API: `/template/policy/list/sla`
+- The HTTP operation: `GET`
 - Output: Table format as in vManage Web Interface or we can customize as we like.
 - We use python `rich` module to formulate and color to have pretty table.
 
