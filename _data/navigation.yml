@@ -28,6 +28,6 @@ docs:
       - title: "1. SD-WAN 20.X setup"
         url: /sd-wan/SD-WAN-setup/
       - title: "2. Develop SDWANCLI"
-        url: /sd-wan/vManage-REST/
+        url: /sd-wan/vManage-REST-API/
       - title: "3. Configure OMP and VPN"
         url: /sd-wan/extend-topology/
