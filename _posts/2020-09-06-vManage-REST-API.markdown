@@ -244,7 +244,7 @@ Now, we just need to format it in a table using `rich`.
 
 The output looks good.
 
-{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/04_SLA_list.png" %}
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/04_sla_list.png" %}
 
 ## 5. Conclusion
 
