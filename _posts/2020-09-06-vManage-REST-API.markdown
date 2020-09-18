@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "vManage REST APIs - Cisco SD-WAN 20.3.1 and building the SDWANCLI"
-date:   2020-09-18
+date:   2020-09-06
 categories: sd-wan
 toc: true
 toc_label: "On This Post"
