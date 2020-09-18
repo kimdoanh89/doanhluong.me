@@ -15,13 +15,13 @@ using python `click` module. This `sdwancli` is published in CiscoDevnet CodeExc
 
 [![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/kimdoanh89/sdwan-python-rest-api)
 
-Or you can find it originally on Github: https://github.com/kimdoanh89/sdwan-python-rest-api
+Or you can find it originally on my Github [repo](https://github.com/kimdoanh89/sdwan-python-rest-api).
 
 ## 1. vManage REST APIs basics
 There are some excellent materials from Cisco DevNet that can help you get started with
 the vManage REST APIs. I highly recommend looking at these resources first.
 
-https://developer.cisco.com/learning/modules/sd-wan
+[Devnet SD-WAN learning module](https://developer.cisco.com/learning/modules/sd-wan)
 
 The vManage REST API library and documentation are bundled with and installed on the vManage 
 web application software. To access the API documentation from a web browser, use this URL:
@@ -132,10 +132,28 @@ Options:
   --jitter TEXT       jitter 1 - 1000 ms
   --help              Show this message and exit.
 ```
+## 3. vManage server information and Authentication
+The environment is pre-configured to access my local SD-WAN lab in GNS3. The vManage information
+is stored in the `vmanage/constants.py` file as follows:
 
-## 3. Develop the first `sla list` command
+```bash
+vmanage = {
+    "host": "192.168.148.129",
+    "port": "8443",
+    "username": "admin",
+    "password": "admin"
+}
+```
 
-### 3.1. Which API to use?
+You can edit the variables in the `vmanage/constants.py` to point to your own vManage 
+instance, the AlwaysOn SDWAN Sandbox, or the Reservable SDWAN Sandbox.
+
+**Note:** When you use the AlwaysOn Sandbox, you do not have permission to perform
+some commands such as `edit`, `create`, `delete`.
+
+## 4. Develop the first `sla list` command
+
+### 4.1. Which API to use?
 Let's open a browser and navigate to our vManage REST APIs documentation at: 
 https://192.168.148.129:8444/apidocs.
 
@@ -153,6 +171,89 @@ Keep exploring, right there, the first API and also the HTTP operation
 
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_try_it_out_SLA.png" %}
 
+Now, we may face the error since we run directly our GET command without authentication 
+with the vManage. However, we can download the [Postman-for-AlwaysOn-Cisco-SD-WAN](https://github.com/CiscoDevNet/Postman-for-AlwaysOn-Cisco-SD-WAN)
+collection to help us authenticate with the vManage server.
+We also need to create a new SD-WAN environment with our vManage server information.
 
-### 3.2. How vManage Web Interface display this?
-### 3.3. Start coding as we like
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_postman.png" %}
+
+Now, run again the **Try it out!** in the vManage REST APIs documentation interface, the
+response should look like this.
+
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_response.png" %}
+
+### 4.2. How vManage Web Interface display this?
+So in the previous step, we can get back the SLA list in `json` format. We may want to 
+present this list in table format. Let's take a look at the SLA list in the vManage Web 
+Interface.
+
+We need to go to `Configuration > Policies > Centralized Policy > Add a policy > Select SLA Class`, 
+to see this table.
+
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_SLA_Web.png" %}
+
+### 4.3. Start developing `sla list` with python
+
+Now, we have all information we need:
+- The API: `GET`
+- The HTTP operation: `/template/policy/list/sla`
+- Output: Table format as in vManage Web Interface or we can customize as we like.
+- We use python `rich` module to formulate and color to have pretty table.
+
+The function looks like this:
+
+```python
+@cli_sla.command(name="list", help="Get list of SLA Classes")
+def sla_list():
+    headers = authentication(vmanage)
+    base_url = "https://" + f'{vmanage["host"]}:{vmanage["port"]}/dataservice'
+    api = "/template/policy/list/sla"
+    url = base_url + api
+    response = requests.get(url=url, headers=headers, verify=False)
+    if response.status_code == 200:
+        items = response.json()['data']
+    else:
+        print("Error:: " + str(response.text))
+        exit()
+    console = Console()
+    table = Table(
+        "Name", "Loss (%)", "Latency (ms)", "jitter (ms)", "Reference Count",
+        "Updated by", "SLA ID", "Last Updated")
+
+    for item in items:
+        # breakpoint()
+        time_date = datetime.datetime.fromtimestamp(
+            item["lastUpdated"]/1000).strftime('%c')
+        table.add_row(f'[green]{item["name"]}[/green]',
+                      f'[blue]{item["entries"][0]["loss"]}[/blue]',
+                      f'[magenta]{item["entries"][0]["latency"]}[/magenta]',
+                      f'[cyan]{item["entries"][0]["jitter"]}[/cyan]',
+                      f'[orange1]{item["referenceCount"]}[/orange1]',
+                      f'[bright_green]{item["owner"]}[/bright_green]',
+                      f'[magenta]{item["listId"]}[/magenta]',
+                      f'[yellow]{time_date}[/yellow]')
+    console.print(table)
+```
+
+First, we need to authenticate with vManage using `authentication(vmanage)`. It will return
+the headers that we need to put in the `requests.get(url=url, headers=headers, verify=False)`.
+We receive the `response` that is exactly as we see with the **Try it out!** step.
+
+Now, we just need to format it in a table using `rich`.
+
+The output looks good.
+
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/04_SLA_list.png" %}
+
+## 5. Conclusion
+
+In this post, we have going through one example to create the sdwancli `sla list` command.
+It's quite awesome that with a single command we can see the SLA list information, which 
+takes a lot of steps to figure out in the vManage Web Interface. Also, we can customize 
+our information as we like. 
+
+It's easy to extend the `sdwancli` library to include new commands and subcommands. For 
+example, we can create the `omp tlocs` or `omp tloc-paths` following the same steps in 
+Section 4.
+
