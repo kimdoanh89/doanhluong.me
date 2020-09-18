@@ -32,10 +32,10 @@ ip-address is the IP address of the vManage server, and port is the port used fo
 server, could be either 8443 or 8444. 
 
 Since I reinstalled the SD-WAN lab on the new host machine, the vManage server now has
-the ip-address of 192.168.148.129 (changed from 192.168.134.138 on the old machine).
+the ip-address of `192.168.148.129` (changed from `192.168.134.138` on the old machine).
 
-In our lab, the vManage web server has the URL https://192.168.148.129:8444. We can access the 
-vManage REST API at https://192.168.148.129:8444/apidocs.
+In our lab, the vManage web server has the URL `https://192.168.148.129:8444`. We can access the 
+vManage REST API at `https://192.168.148.129:8444/apidocs`.
 
 ## 2. Click setup
 
@@ -155,7 +155,7 @@ some commands such as `edit`, `create`, `delete`.
 
 ### 4.1. Which API to use?
 Let's open a browser and navigate to our vManage REST APIs documentation at: 
-https://192.168.148.129:8444/apidocs.
+`https://192.168.148.129:8444/apidocs`.
 
 The first question we need to ask is which API and which HTTP operation (GET/PUT/POST/DELETE)
 we need to use to list the SLA Class. The HTTP operation is easy, we need to use GET operation.
