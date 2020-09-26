@@ -349,23 +349,23 @@ For each row, we color the information with different colors.
 
 ```python
 console = Console()
-    table = Table(
-        "Name", "Loss (%)", "Latency (ms)", "jitter (ms)", "Reference Count",
-        "Updated by", "SLA ID", "Last Updated")
+table = Table(
+    "Name", "Loss (%)", "Latency (ms)", "jitter (ms)", "Reference Count",
+    "Updated by", "SLA ID", "Last Updated")
 
-    for item in items:
-        # breakpoint()
-        time_date = datetime.datetime.fromtimestamp(
-            item["lastUpdated"]/1000).strftime('%c')
-        table.add_row(f'[green]{item["name"]}[/green]',
-                      f'[blue]{item["entries"][0]["loss"]}[/blue]',
-                      f'[magenta]{item["entries"][0]["latency"]}[/magenta]',
-                      f'[cyan]{item["entries"][0]["jitter"]}[/cyan]',
-                      f'[orange1]{item["referenceCount"]}[/orange1]',
-                      f'[bright_green]{item["owner"]}[/bright_green]',
-                      f'[magenta]{item["listId"]}[/magenta]',
-                      f'[yellow]{time_date}[/yellow]')
-    console.print(table)
+for item in items:
+    # breakpoint()
+    time_date = datetime.datetime.fromtimestamp(
+        item["lastUpdated"]/1000).strftime('%c')
+    table.add_row(f'[green]{item["name"]}[/green]',
+                  f'[blue]{item["entries"][0]["loss"]}[/blue]',
+                  f'[magenta]{item["entries"][0]["latency"]}[/magenta]',
+                  f'[cyan]{item["entries"][0]["jitter"]}[/cyan]',
+                  f'[orange1]{item["referenceCount"]}[/orange1]',
+                  f'[bright_green]{item["owner"]}[/bright_green]',
+                  f'[magenta]{item["listId"]}[/magenta]',
+                  f'[yellow]{time_date}[/yellow]')
+console.print(table)
 ```
 The output looks good.
 
