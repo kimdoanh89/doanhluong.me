@@ -194,7 +194,7 @@ to see this table.
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_SLA_Web.png" %}
 
 ### 4.3. Start developing `sla list` with python
-
+#### sla_list function
 Now, we have all information we need:
 - The API: `/template/policy/list/sla`
 - The HTTP operation: `GET`
@@ -239,9 +239,134 @@ def sla_list():
 First, we need to authenticate with vManage using `authentication(vmanage)`. It will return
 the headers that we need to put in the `requests.get(url=url, headers=headers, verify=False)`.
 We receive the `response` that is exactly as we see with the **Try it out!** step.
+#### Output of the request call
+The `response` is as follows:
+```json
+"data": [
+    {
+      "listId": "9d55345c-61c5-4972-9667-088710d6e014",
+      "name": "Transactional-Data",
+      "type": "sla",
+      "description": "ACI Transactional Data SLA",
+      "entries": [
+        {
+          "jitter": "100",
+          "latency": "50",
+          "loss": "5"
+        }
+      ],
+      "lastUpdated": 1598695612881,
+      "owner": "system",
+      "readOnly": false,
+      "version": "1.0",
+      "infoTag": "aci",
+      "referenceCount": 0,
+      "references": [],
+      "isActivatedByVsmart": false
+    },
+    {
+      "listId": "63c0f996-7cc3-407e-9a75-7f6b6a176980",
+      "name": "Bulk-Data",
+      "type": "sla",
+      "description": "ACI Bulk Data SLA",
+      "entries": [
+        {
+          "jitter": "100",
+          "latency": "300",
+          "loss": "10"
+        }
+      ],
+      "lastUpdated": 1598695613341,
+      "owner": "system",
+      "readOnly": false,
+      "version": "1.0",
+      "infoTag": "aci",
+      "referenceCount": 0,
+      "references": [],
+      "isActivatedByVsmart": false
+    },
+    {
+      "listId": "c6ea38b8-38d0-430b-b576-c582f504f383",
+      "name": "Voice-And-Video",
+      "type": "sla",
+      "description": "ACI Voice And Video SLA",
+      "entries": [
+        {
+          "jitter": "30",
+          "latency": "45",
+          "loss": "2"
+        }
+      ],
+      "lastUpdated": 1598695612247,
+      "owner": "system",
+      "readOnly": false,
+      "version": "1.0",
+      "infoTag": "aci",
+      "referenceCount": 0,
+      "references": [],
+      "isActivatedByVsmart": false
+    },
+    {
+      "listId": "d81de142-24fa-492d-b62c-109310ac829d",
+      "name": "Default",
+      "type": "sla",
+      "description": "ACI Default SLA",
+      "entries": [
+        {
+          "jitter": "100",
+          "latency": "300",
+          "loss": "25"
+        }
+      ],
+      "lastUpdated": 1598695612067,
+      "owner": "system",
+      "readOnly": false,
+      "version": "1.0",
+      "infoTag": "aci",
+      "referenceCount": 0,
+      "references": [],
+      "isActivatedByVsmart": false
+    }
+  ]
+```
 
+There are four SLA classes that are defined by default in our SD-WAN system.
+- ACI Transactional Data SLA
+- ACI Bulk Data SLA
+- ACI Voice And Video SLA
+- ACI Default SLA
+
+For each class, it is a dictionary 
+`dict_keys(['listId', 'name', 'type', 'description', 'entries', 'lastUpdated', 'owner', 'readOnly', 'version', 'infoTag', 'referenceCount', 'references', 'isActivatedByVsmart'])`.
 Now, we just need to format it in a table using `rich`.
 
+#### Formatting the output with python `rich` module
+
+First, we define the columns in the table, including: `Name`, `Loss (%)`, `Latency (ms)`,
+`jitter (ms)`, `Reference Count`, and so on.
+
+For each row, we color the information with different colors.
+
+```python
+console = Console()
+    table = Table(
+        "Name", "Loss (%)", "Latency (ms)", "jitter (ms)", "Reference Count",
+        "Updated by", "SLA ID", "Last Updated")
+
+    for item in items:
+        # breakpoint()
+        time_date = datetime.datetime.fromtimestamp(
+            item["lastUpdated"]/1000).strftime('%c')
+        table.add_row(f'[green]{item["name"]}[/green]',
+                      f'[blue]{item["entries"][0]["loss"]}[/blue]',
+                      f'[magenta]{item["entries"][0]["latency"]}[/magenta]',
+                      f'[cyan]{item["entries"][0]["jitter"]}[/cyan]',
+                      f'[orange1]{item["referenceCount"]}[/orange1]',
+                      f'[bright_green]{item["owner"]}[/bright_green]',
+                      f'[magenta]{item["listId"]}[/magenta]',
+                      f'[yellow]{time_date}[/yellow]')
+    console.print(table)
+```
 The output looks good.
 
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/04_sla_list.png" %}
@@ -255,5 +380,26 @@ our information as we like.
 
 It's easy to extend the `sdwancli` library to include new commands and subcommands. For 
 example, we can create the `omp tlocs` or `omp tloc-paths` following the same steps in 
-Section 4.
+Section 4. 
+
+Recently, in RouterGods, Dustin (Cisco Press SD-WAN book author), did a live 
+troubleshooting session for control plane problem when onboarding new WAN Edge to the SD-WAN, 
+I have implemented all the TB commands in my python library.
+
+This table compares the commands on the vEdge and the commands using this `sdwancli` library.
+Moreover, there are some syntax differences between the commands on vEdge and cEdge. But, 
+with `sdwancli`, we can just use the same.
+
+| vEdge commands                   | Sdwancli commands                                                  |
+|----------------------------------|--------------------------------------------------------------------|
+| show control connections         | python sdwancli.py control connections --system_ip 2.2.2.1         |
+| show control connections-history | python sdwancli.py control connections-history --system_ip 2.2.2.1 |
+| show bfd sessions                | python sdwancli.py bfd sessions --system_ip 2.2.2.1                |
+| show omp tlocs                   | python sdwancli.py omp tlocs --system_ip 2.2.2.1                   |
+| show omp tloc-paths              | python sdwancli.py omp tloc-paths --system_ip 2.2.2.1              |
+
+And here are the results.
+
+{% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/07_TB_commands_results.png" %}
+
 
