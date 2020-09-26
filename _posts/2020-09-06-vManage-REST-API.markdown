@@ -158,11 +158,11 @@ Let's open a browser and navigate to our vManage REST APIs documentation at:
 `https://192.168.148.129:8444/apidocs`.
 
 The first question we need to ask is which API and which HTTP operation (GET/PUT/POST/DELETE)
-we need to use to list the SLA Class. The HTTP operation is easy, we need to use GET operation.
+we use to list the SLA Class. The HTTP operation is easy, we need to use GET operation.
 
 However, for the API, vManage supports quite a lot of functionalities. Let's search in the
 browser for the keyword `SLA`. Here it is, `Configuration - Policy SLA Class Builder` is the
-group of APIs that we need to pay attention to.
+group of APIs that we should pay attention to.
 
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_find_SLA.png" %}
 
@@ -174,7 +174,7 @@ Keep exploring, right there, the first API and also the HTTP operation
 Now, we may face the error since we run directly our GET command without authentication 
 with the vManage. However, we can download the [Postman-for-AlwaysOn-Cisco-SD-WAN](https://github.com/CiscoDevNet/Postman-for-AlwaysOn-Cisco-SD-WAN)
 collection to help us authenticate with the vManage server.
-We also need to create a new SD-WAN environment with our vManage server information.
+We also should create a new SD-WAN environment with our vManage server information.
 
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_postman.png" %}
 
@@ -188,7 +188,7 @@ So in the previous step, we can get back the SLA list in `json` format. We may w
 present this list in table format. Let's take a look at the SLA list in the vManage Web 
 Interface.
 
-We need to go to `Configuration > Policies > Centralized Policy > Add a policy > Select SLA Class`, 
+We go to `Configuration > Policies > Centralized Policy > Add a policy > Select SLA Class`, 
 to see this table.
 
 {% include figure image_path="/assets/03_SD-WAN/01_vManage_APIs/images/06_SLA_Web.png" %}
@@ -236,8 +236,8 @@ def sla_list():
     console.print(table)
 ```
 
-First, we need to authenticate with vManage using `authentication(vmanage)`. It will return
-the headers that we need to put in the `requests.get(url=url, headers=headers, verify=False)`.
+First, we authenticate with vManage using `authentication(vmanage)`. It will return
+the headers that we can put in the `requests.get(url=url, headers=headers, verify=False)`.
 We receive the `response` that is exactly as we see with the **Try it out!** step.
 #### Output of the request call
 The `response` is as follows:
