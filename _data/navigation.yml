@@ -3,10 +3,11 @@
 main:
   - title: "Blog"
     url: /
-  - title: "About"
-    url: /about/
   - title: "GitHub"
     url: https://github.com/kimdoanh89
+  - title: "About"
+    url: /about/
+
 
 docs:
   - title: "Home"
