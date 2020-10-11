@@ -7,17 +7,17 @@
 @import "minimal-mistakes"; // main partials
 
 html {
-  font-size: 14px; // change to whatever
+  font-size: 15px; // change to whatever
 
   @include breakpoint($medium) {
-    font-size: 14px; // change to whatever
+    font-size: 15px; // change to whatever
   }
 
   @include breakpoint($large) {
-    font-size: 16px; // change to whatever
+    font-size: 17px; // change to whatever
   }
 
   @include breakpoint($x-large) {
-    font-size: 18px; // change to whatever
+    font-size: 18.5px; // change to whatever
   }
 }
