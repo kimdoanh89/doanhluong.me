@@ -194,6 +194,21 @@ Options:
   --help         Show this message and exit.
 ```
 
+One thing I feel good about this tool is that I can automatically parse the output of 
+`show facts` command with the option `--structured`. Many thanks to [Carl Montanari](https://twitter.com/carlrmontanari)
+with his beautiful function [print_structured_result](https://github.com/scrapli/nornir_scrapli/blob/master/nornir_scrapli/functions/print_structured_result.py).
+
+For example `fastcli show facts --command "sh bgp summmary" --structured`
+
+{% include figure image_path="/assets/04_fastcli/images/00_bgp_summary_structured.PNG" %}
+
+Or another example `fastcli show facts --command "sh version" --structured`
+
+{% include figure image_path="/assets/04_fastcli/images/00_sh_version_structured.PNG" %}
+
+You can show it as a table also. *Note that:* For table, only `sh version` is working.
+
+{% include figure image_path="/assets/04_fastcli/images/00_sh_version_table.PNG" %}
 
 ## 2. Requirements and Setup
 
