@@ -204,7 +204,7 @@ For example `fastcli show facts --command "sh bgp summmary" --structured`
 
 Or another example `fastcli show facts --command "sh version" --structured`
 
-{% include figure image_path="/assets/04_fastcli/images/00_sh_version_structured.PNG" %}
+{% include figure image_path="/assets/04_fastcli/images/00_sh_version_structrured.PNG" %}
 
 You can show it as a table also. *Note that:* For table, only `sh version` is working.
 
