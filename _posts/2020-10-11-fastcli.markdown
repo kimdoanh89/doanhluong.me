@@ -145,18 +145,6 @@ or `fastcli show facts --command "sh ip bgp"`.
 
 {% include figure image_path="/assets/04_fastcli/images/03_command_table.png" %}
 
-| fastcli commands                           	| Usage                                                                                                                	|
-|--------------------------------------------	|----------------------------------------------------------------------------------------------------------------------	|
-| fastcli interfaces configure               	| configure the Interfaces of all the devices, can be filtered with --device, --group                                  	|
-| fastcli show facts --command "any command" 	| show facts with a given command, can be filtered with --device, --group, show <br> structured data with --structured 	|
-| fastcli ospf configure --ospf_area 0       	| configure OSPF routing of all the OSPF routers, can configure each area with: --ospf_area                            	|
-| fastcli ospf stub --ospf_area 0            	| configure an OSPF area as stub area                                                                                  	|
-| fastcli ospf nssa --ospf_area 0            	| configure an OSPF area as Not-So-Stubby-Area                                                                         	|
-| fastcli bgp eigrp configure                	| configure EIGRP routing of all the EIGRP routers                                                                     	|
-| fastcli rip configure                      	| configure RIP routing of all the RIP routers                                                                         	|
-| fastcli bgp configure                      	| configure BGP routing of all the BGP routers                                                                         	|
-
-
 You can run `fastcli` to see which commands it is currently supported:
 ```bash
 fastcli
