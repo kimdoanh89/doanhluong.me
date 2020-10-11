@@ -142,6 +142,9 @@ The workflow is:
 or `fastcli show facts --command "sh ip bgp"`.
 
 ### 1.3. Some commands supported
+
+{% include figure image_path="/assets/04_fastcli/images/03_command_table.png" %}
+
 | fastcli commands                           	| Usage                                                                                                                	|
 |--------------------------------------------	|----------------------------------------------------------------------------------------------------------------------	|
 | fastcli interfaces configure               	| configure the Interfaces of all the devices, can be filtered with --device, --group                                  	|
