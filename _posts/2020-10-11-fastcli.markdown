@@ -290,3 +290,11 @@ Steps:
 - Check with `fastcli show facts --command "sh run | s router rip" --group rip`
 
 {% include figure image_path="/assets/04_fastcli/images/04_rip_config.png" %}
+
+
+## 4. Conclusion
+
+Using this tool helps me a lot to spinning up the lab, especially for the interfaces 
+configuration. Whenever I want a new lab, I just copy the full folder under `inventory`, 
+for example, the `inventory/bgp` folder, then start modifying from there. I will continue
+to add functions to this `fastcli` tool for MPLS VPN configuration, DMVPN, etc ...
