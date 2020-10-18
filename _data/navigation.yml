@@ -32,6 +32,8 @@ docs:
         url: /sd-wan/vManage-REST-API/
       - title: "3. Configure OMP and VPN"
         url: /sd-wan/extend-topology/
+      - title: "4. Configure and attach device template"
+        url: /sd-wan/SDWAN-templates/
   - title: "Nornir"
     children:
       - title: "Fastcli nornir 3.0 app"

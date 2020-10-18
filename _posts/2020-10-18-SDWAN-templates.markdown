@@ -83,7 +83,7 @@ We create the first `BR-VE-SYSTEM` template as in the following figure.
 
 {% include figure image_path="/assets/05_templates/images/BR-VE-SYSTEM.PNG" %}
 
-### 1.2. Create Banner Template (Optional)
+## 1.2. Create Banner Template (Optional)
 - Template name: VE-banner
 - Description: VE-banner
 - Login banner: Global "This is vEdge Cloud Login banner"
@@ -330,3 +330,8 @@ lost-to-path-id not set
      community        not set
      unknown-attr-len not set
 ```
+
+# 3. Conclusion
+This post is served as a record for my learning process of how to create, attach device templates to WAN Edge
+devices for BGP configuration. From time to time, whenever I forget something, I can always refer to this for
+specific details. If anyone finds it useful, it's my pleasure!
