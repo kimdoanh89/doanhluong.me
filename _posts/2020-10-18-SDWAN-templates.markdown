@@ -38,8 +38,14 @@ enable or config, such as routing protocols (OSPF, BGP), interface parameters.
 
 Device templates are a collection of feature templates and can be attached to the devices. 
 
-My purpose for this post is to build the device template for configuration of `vEdge1` in the full-topology lab
-in GNS3, including System, banner, interfaces, and BGP configurations. Let's take a close look at `vEdge1`.
+My purpose for this post is:
+- to build the device template for configuration of `vEdge1`, `vEdge2`, and `DC1-vEdge1` in the full-topology lab
+in GNS3, including System, banner, interfaces, and BGP configurations. 
+- I will also take a further step to modify some feature templates (VPN Interface Ethernet templates), to include
+the `restrict` attribute and `tunnel groups` options, to control the data plane connectivity between WAN Edge
+routers.
+
+Let's take a close look at `vEdge1`.
 
 {% include figure image_path="/assets/05_templates/images/00-vEdge1.PNG" %}
 
@@ -247,7 +253,6 @@ Copy from BR-VE-VPNINT-VPN0-G0, only change the following fields:
 
 ## 2.2. Attach device template to WAN Edges
 
-### Attach BR-VE-DEV-TEMP to vEdge1
 - Use the addressing scheme in the topology to fill in the variables when apply the device template.
 
 - Attach vEdge1
@@ -330,8 +335,166 @@ lost-to-path-id not set
      community        not set
      unknown-attr-len not set
 ```
+# 3. Control BFD connection among WAN Edge routers
+## 3.1. Full-mesh connectivity
+There are private and public colors.
+- Public colors: 3g, biz-internet, public-internet, lte, blue, bronze, custom1, custom2, custom3, gold, green,
+red, silver. Use when there is a NAT between WAN Edge devices
+- Private colors: metro-ethernet, mpls, private1 to private6. Only use when there is no NAT between devices (overlay).
 
-# 3. Conclusion
+When establishing the IPsec data plane, a full-mesh connectivity between all routers in the fabric is established by
+default. 
+
+Consider vEdge1 with 3 colors: mpls, biz-internet, lte:
+```bash
+vEdge1# show omp tlocs advertised | b ADD
+ADDRESS                                           
+FAMILY   TLOC IP          COLOR            ENCAP  
+--------------------------------------------------
+ipv4     192.168.255.1    mpls             ipsec  
+         192.168.255.1    biz-internet     ipsec  
+         192.168.255.1    lte              ipsec  
+```
+
+Consider vEdge2 with 3 colors: mpls, biz-internet, lte:
+```bash
+vEdge2# show omp tlocs advertised | b ADD
+ADDRESS                                           
+FAMILY   TLOC IP          COLOR            ENCAP  
+--------------------------------------------------
+ipv4     192.168.255.2    mpls             ipsec  
+         192.168.255.2    biz-internet     ipsec  
+         192.168.255.2    lte              ipsec  
+```
+
+Let's see the BFD connections between vEdge1 (3 colors: mpls, biz-internet, lte) and vEdge2 (3 colors: mpls,
+biz-internet, lte). Each vEdge has three colors, so with full-mesh connectivity we have 3*3 = 9 BFD connections.
+
+```bash
+vEdge1# show bfd sessions 
+                                      SOURCE TLOC      REMOTE TLOC                                      DST PUBLIC                      DST PUBLIC         DETECT      TX                              
+SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP                       IP                              PORT        ENCAP  MULTIPLIER  INTERVAL(msec) UPTIME          TRANSITIONS 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+192.168.255.2    2        up          biz-internet     biz-internet     155.48.1.1                      155.48.2.2                      12346       ipsec  7           1000           0:00:38:06      0           
+192.168.255.2    2        up          biz-internet     mpls             155.48.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:01:00      0           
+192.168.255.2    2        up          biz-internet     lte              155.48.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:01:00      0           
+192.168.255.2    2        up          mpls             biz-internet     172.16.1.1                      155.48.2.2                      12346       ipsec  7           1000           0:00:00:58      0           
+192.168.255.2    2        up          mpls             mpls             172.16.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:00:58      0           
+192.168.255.2    2        up          mpls             lte              172.16.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:00:58      0           
+192.168.255.2    2        up          lte              biz-internet     220.90.1.1                      155.48.2.2                      12346       ipsec  7           1000           0:00:00:58      0           
+192.168.255.2    2        up          lte              mpls             220.90.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:00:58      0           
+192.168.255.2    2        up          lte              lte              220.90.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:00:58      0      
+```
+
+
+To control the data plane connectivity (BFD connections), we can set the `restrict` attribute or configure tunnel
+groups.
+
+## 3.1. Control BFD connections with Restrict Attribute
+The restrict attribute needs to be defined per site and can be 1 or 0. 
+- restrict = 1: this device will only form the tunnels with other TLOCs advertising the color
+- retrict = 0: can form tunnels with other colors
+
+To set the `restrict` attribute of a color, we have to configure the VPN Interface associated with this color. For
+example:
+- configure `BR-VE-VPNINT-VPN0-G0` to set the `restrict` attribute for `mpls` color.
+- configure `BR-VE-VPNINT-VPN0-G1` to set the `restrict` attribute for `biz-internet` color.
+- configure `BR-VE-VPNINT-VPN0-G2` to set the `restrict` attribute for `lte` color.
+
+
+{% include figure image_path="/assets/06_operations/images/03-restrict-attribute.PNG" %}
+
+
+Push the configuration to the vEdge1 and vEdge2: Check the `restrict` box
+
+{% include figure image_path="/assets/06_operations/images/03-restrict-attribute-attach.PNG" %}
+
+Let's see the BFD connections after setting `restrict` attribute. There are only three BFD connections: biz-internet
+<- -> biz-internet, mpls <- -> mpls, and lte <- -> lte.
+
+```bash
+vEdge1# sh bfd sessions
+                                      SOURCE TLOC      REMOTE TLOC                                      DST PUBLIC                      DST PUBLIC         DETECT      TX                              
+SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP                       IP                              PORT        ENCAP  MULTIPLIER  INTERVAL(msec) UPTIME          TRANSITIONS 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+192.168.255.2    2        up          biz-internet     biz-internet     155.48.1.1                      155.48.2.2                      12346       ipsec  7           1000           0:01:25:28      0           
+192.168.255.2    2        up          mpls             mpls             172.16.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:48:20      0           
+192.168.255.2    2        up          lte              lte              220.90.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:48:20      0          
+```
+
+## 3.2. Control BFD connections with Tunnel Groups
+
+Only tunnels with matching tunnel groups, or no tunnel group defined, will form BFD connections. If using tunnel
+groups, all sites should define tunnel groups.
+
+Let's involve now the DC1-vEdge1 with vEdge1, vEdge2. Each WAN Edge has three colors: mpls, biz-internet, lte. We
+want to restrict `biz-internet`, and set two tunnel groups:
+- Group 400: biz-internet
+- Group 500: mpls and lte
+
+Configure the tunnel groups for each VPN Interface:
+
+{% include figure image_path="/assets/06_operations/images/03-tunnel-groups.PNG" %}
+
+Push the configuration to the vEdge1, vEdge2, and DC1-vEdge1: 
+- Check the `restrict` box for `biz-internet`
+- Set group accordingly for mpls, lte, and biz-internet.
+
+{% include figure image_path="/assets/06_operations/images/03-tunnel-groups-attach.PNG" %}
+
+Let's see the BFD connections among three devices:
+
+```bash
+DV1-vEdge1# show bfd sessions 
+                                      SOURCE TLOC      REMOTE TLOC                                      DST PUBLIC                      DST PUBLIC         DETECT      TX                              
+SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP                       IP                              PORT        ENCAP  MULTIPLIER  INTERVAL(msec) UPTIME          TRANSITIONS 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+192.168.255.1    1        up          biz-internet     biz-internet     155.48.101.101                  155.48.1.1                      12346       ipsec  7           1000           0:00:06:57      1           
+192.168.255.1    1        up          mpls             mpls             172.16.101.101                  172.16.1.1                      12406       ipsec  7           1000           0:00:06:57      1           
+192.168.255.1    1        up          mpls             lte              172.16.101.101                  220.90.1.1                      12406       ipsec  7           1000           0:00:06:57      0           
+192.168.255.1    1        up          lte              mpls             220.90.101.101                  172.16.1.1                      12406       ipsec  7           1000           0:00:06:57      0           
+192.168.255.1    1        up          lte              lte              220.90.101.101                  220.90.1.1                      12406       ipsec  7           1000           0:00:06:57      1           
+192.168.255.2    2        up          biz-internet     biz-internet     155.48.101.101                  155.48.2.2                      12346       ipsec  7           1000           0:00:10:15      1           
+192.168.255.2    2        up          mpls             mpls             172.16.101.101                  172.16.2.2                      12426       ipsec  7           1000           0:00:19:30      0           
+192.168.255.2    2        up          mpls             lte              172.16.101.101                  220.90.2.2                      12426       ipsec  7           1000           0:00:10:15      0           
+192.168.255.2    2        up          lte              mpls             220.90.101.101                  172.16.2.2                      12426       ipsec  7           1000           0:00:10:14      0           
+192.168.255.2    2        up          lte              lte              220.90.101.101                  220.90.2.2                      12426       ipsec  7           1000           0:00:19:28      0      
+
+
+vEdge1# show bfd sessions
+                                      SOURCE TLOC      REMOTE TLOC                                      DST PUBLIC                      DST PUBLIC         DETECT      TX                              
+SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP                       IP                              PORT        ENCAP  MULTIPLIER  INTERVAL(msec) UPTIME          TRANSITIONS 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+192.168.255.2    2        up          biz-internet     biz-internet     155.48.1.1                      155.48.2.2                      12346       ipsec  7           1000           0:00:00:17      1           
+192.168.255.2    2        up          mpls             mpls             172.16.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:00:17      1           
+192.168.255.2    2        up          mpls             lte              172.16.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:00:17      2           
+192.168.255.2    2        up          lte              mpls             220.90.1.1                      172.16.2.2                      12426       ipsec  7           1000           0:00:00:17      0           
+192.168.255.2    2        up          lte              lte              220.90.1.1                      220.90.2.2                      12426       ipsec  7           1000           0:00:00:17      1           
+192.168.255.101  101      up          biz-internet     biz-internet     155.48.1.1                      155.48.101.101                  12366       ipsec  7           1000           0:00:00:17      1           
+192.168.255.101  101      up          mpls             mpls             172.16.1.1                      172.16.101.101                  12366       ipsec  7           1000           0:00:00:17      1           
+192.168.255.101  101      up          mpls             lte              172.16.1.1                      220.90.101.101                  12366       ipsec  7           1000           0:00:00:17      0           
+192.168.255.101  101      up          lte              mpls             220.90.1.1                      172.16.101.101                  12366       ipsec  7           1000           0:00:00:17      0           
+192.168.255.101  101      up          lte              lte              220.90.1.1                      220.90.101.101                  12366       ipsec  7           1000           0:00:00:17      1           
+
+
+vEdge2# show bfd sessions 
+                                      SOURCE TLOC      REMOTE TLOC                                      DST PUBLIC                      DST PUBLIC         DETECT      TX                              
+SYSTEM IP        SITE ID  STATE       COLOR            COLOR            SOURCE IP                       IP                              PORT        ENCAP  MULTIPLIER  INTERVAL(msec) UPTIME          TRANSITIONS 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+192.168.255.1    1        up          biz-internet     biz-internet     155.48.2.2                      155.48.1.1                      12346       ipsec  7           1000           0:00:08:06      1           
+192.168.255.1    1        up          mpls             mpls             172.16.2.2                      172.16.1.1                      12406       ipsec  7           1000           0:00:08:06      1           
+192.168.255.1    1        up          mpls             lte              172.16.2.2                      220.90.1.1                      12406       ipsec  7           1000           0:00:08:06      2           
+192.168.255.1    1        up          lte              mpls             220.90.2.2                      172.16.1.1                      12406       ipsec  7           1000           0:00:08:06      0           
+192.168.255.1    1        up          lte              lte              220.90.2.2                      220.90.1.1                      12406       ipsec  7           1000           0:00:08:06      1           
+192.168.255.101  101      up          biz-internet     biz-internet     155.48.2.2                      155.48.101.101                  12366       ipsec  7           1000           0:00:11:25      1           
+192.168.255.101  101      up          mpls             mpls             172.16.2.2                      172.16.101.101                  12366       ipsec  7           1000           0:00:20:40      0           
+192.168.255.101  101      up          mpls             lte              172.16.2.2                      220.90.101.101                  12366       ipsec  7           1000           0:00:11:25      0           
+192.168.255.101  101      up          lte              mpls             220.90.2.2                      172.16.101.101                  12366       ipsec  7           1000           0:00:11:24      0           
+192.168.255.101  101      up          lte              lte              220.90.2.2                      220.90.101.101                  12366       ipsec  7           1000           0:00:20:39      0           
+
+```
+
+# 4. Conclusion
 This post is served as a record for my learning process of how to create, attach device templates to WAN Edge
 devices for BGP configuration. From time to time, whenever I forget something, I can always refer to this for
 specific details. If anyone finds it useful, it's my pleasure!
