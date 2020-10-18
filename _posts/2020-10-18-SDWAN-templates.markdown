@@ -33,6 +33,10 @@ All are very fantastic!!! However, as a beginner, I don't know what a feature te
 I struggled to get my head around how to construct a device template, what are the required components, and how
 do we utilise them? 
 
+I highly recommend reading/watching the following top-notch resources from Tim that answer all the above questions.
+- [SDWAN deep dive templates](https://carpe-dmvpn.com/2018/12/17/sd-wan-deep-dive-templates/)
+- [The Cisco SD-WAN management plane](https://www.youtube.com/watch?v=2_YypwHfd2Q&feature=youtu.be)
+
 Feature template is the building block of configuration for a specific technology feature that we want to 
 enable or config, such as routing protocols (OSPF, BGP), interface parameters. 
 
