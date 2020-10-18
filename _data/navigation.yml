@@ -34,6 +34,8 @@ docs:
         url: /sd-wan/extend-topology/
       - title: "4. Configure and attach device template"
         url: /sd-wan/SDWAN-templates/
+      - title: "5. Control and data plane operations"
+        url: /sd-wan/SDWAN-operations/
   - title: "Nornir"
     children:
       - title: "Fastcli nornir 3.0 app"
