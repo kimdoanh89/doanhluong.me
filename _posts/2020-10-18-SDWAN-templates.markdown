@@ -21,7 +21,7 @@ Inspiring by these spirits, Judson has built a full-topology lab from the [SD-WA
 in EVE-NG to learn based on practising with the lab. At the time we started the group, my computer was not
 powerful enough to run the full-topology in EVE-NG, so I rebuilt it in GNS3 (GNS3 has a way to limit the CPU
 and RAM resources for each appliance in the topology). My task was easy since Judson has done all heavy tasks
-such as designing the IP addressing scheme, setting up initial configurations :blush:.
+such as designing the IP addressing scheme, setting up initial configurations.
 
 And here is the topology in GNS3:
 
@@ -42,7 +42,7 @@ My purpose for this post is:
 - to build the device template for configuration of `vEdge1`, `vEdge2`, and `DC1-vEdge1` in the full-topology lab
 in GNS3, including System, banner, interfaces, and BGP configurations. 
 - I will also take a further step to modify some feature templates (VPN Interface Ethernet templates), to include
-the `restrict` attribute and `tunnel groups` options, to control the data plane connectivity between WAN Edge
+the `restrict` attribute and `tunnel groups` options, to control the data plane connectivity among WAN Edge
 routers.
 
 Let's take a close look at `vEdge1`.
