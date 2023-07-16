@@ -12,6 +12,10 @@ main:
 docs:
   - title: "Home"
     url: /
+  - title: "Coding"
+    children:
+      - title: "Introduction to SOLID principles"
+        url: /oop/SOLID_principles/
   - title: "MEGA-LAB"
     children:
       - title: "Part 1: Topology design and initial setup"
