@@ -8,15 +8,16 @@ toc_label: "On This Post"
 toc_sticky: true
 ---
 
-Hey friends! Today I'm talking about SOLID - five principles that will level up your object-oriented programming game.
+Hey friends! Today I'm talking about SOLID - five principles that will level up your object-oriented 
+programming game.
 
-I used to think SOLID was one of those abstract concepts that's great in theory but doesn't help day-to-day coding. Boy, was I wrong!
+I used to think SOLID was one of those abstract concepts that's great in theory but doesn't help
+day-to-day coding. Boy, was I wrong!
 
-Sticking to these principles has made my code way easier to reason about and modify. I encounter way fewer bugs and hacky workarounds now.
+Sticking to these principles has made my code way easier to reason about and modify. I encounter
+way fewer bugs and hacky workarounds now.
 
 Let's get into it!
-
-Here is an introduction on SOLID principles for writing better object-oriented code:
 
 SOLID is an acronym that stands for five key principles of object-oriented class design:
 
@@ -26,32 +27,25 @@ SOLID is an acronym that stands for five key principles of object-oriented class
 - I - Interface Segregation Principle
 - D - Dependency Inversion Principle
 
-These principles encourage designs that are robust, extensible and maintainable. Applying them consistently leads to code that is flexible, modular and easier to understand, refactor and test.
+These principles encourage designs that are robust, extensible and maintainable. Applying them
+consistently leads to code that is flexible, modular and easier to understand, refactor and test.
 
 ## 1. Single Responsibility Principle 
 
-The single responsibility principle states that a class should have only one reason to change. In other words, a class should have only one job and encapsulate that functionality entirely. 
+The single responsibility principle states that a class should have only one reason to change.
+In other words, a class should have only one job and encapsulate that functionality entirely. 
 
 Here are some symptoms that indicate code is not following the single responsibility principle:
-
 - A class has too many methods or instance variables
 - Methods in a class do unrelated things - e.g. calculate tax and send email
 - Changes to one functionality breaks other functionality
-- Class name is generic like Utility or Manager
-- Class has vague names like doStuff() or processThings()
-- Code duplication across classes doing similar work
 - God object anti-pattern - one huge central class
 
 To refactor code to follow single responsibility:
-
 - Split large classes into smaller, logical classes 
 - Group methods and variables based on functionality
-- Create new classes for each responsibility
-- Give classes descriptive names based on their purpose
+- Create new classes for each responsibility with descriptive names based on their purpose
 - Remove duplication by extracting common code to new classes 
-- Change method visibility to private if used only within class
-- Create coarse grained interfaces to connect classes
-- Limit interactions between classes not directly related  
 
 For example, refactoring a Customer class:
 
@@ -128,27 +122,15 @@ This ensures the Customer class only handles core customer data, while other cla
 The open/closed principle states that classes should be open for extension but closed for modification. We should be able to add new functionality without changing existing code.
 
 Here are some symptoms that indicate code is not following the open/closed principle:
-
 - Need to modify existing classes to add new features
 - Adding new sub-classes breaks parent class or other subclasses
-- Lots of conditional statements to handle different cases
-- Existing methods have long list of parameters
-- Using if/else or switch/case statements in methods
-- Fear of changing existing code because of potential side-effects
-- Code duplication instead of reusing existing logic
+- Lots of conditional statements (`If/Else` or `Switch/Case`) to handle different cases
 
 To refactor code to be open for extension and closed for modification:
-
 - Use interfaces and abstract classes for stable class contracts 
 - Favor composition over inheritance when adding new functionality
 - Use dependency injection to inject implementations rather than hardcoding
 - Implement new features in new classes that extend existing classes
-- Use strategy/state design patterns to vary behavior using composition
-- Introduce extension points in classes like template methods
-- Prefer polymorphism over complex conditional logic
-- Create new methods rather than modifying existing ones
-- Mark existing methods and classes as final or closed when stable
-- Use adapters or facades when needing to work with existing code
 
 For example, refactoring validation logic:
 
@@ -164,7 +146,7 @@ class Validator:
     if not age > 0:
       return False
 
-    if not isValidPhone(phone):
+    if not is_valid_phone(phone):
       return False
 
     return True
@@ -202,29 +184,22 @@ This makes it easy to add new functionality by creating new classes, without cha
 
 ## 3. Liskov Substitution Principle 
 
-This principle states that child classes should be substitutable for their parent classes. Behavior in the parent class should remain consistent when it is overridden in a child class.
+This principle states that child classes should be substitutable for their parent classes.
+Behavior in the parent class should remain consistent when it is overridden in a child class.
 
 Here are some symptoms that indicate code is violating the Liskov substitution principle:
-
-- Child classes don't properly implement parent class methods
-- Parent class methods throw unexpected errors when called on child objects
-- Child classes do some additional "stuff" beyond parent class methods
-- Parent class methods need to check the type of child objects
-- Child classes override methods and change expectations of how they work
-- Need lots of type checking or type-specific logic
-- Subclasses need to set parent class fields to specific values
+- Child classes don't properly implement parent class methods, do some additional "stuff"
+beyond parent class methods, and change expectations of how they work.
+- Parent class methods throw unexpected errors when called on child objects, need to check
+the type of child objects.
 
 To refactor code to follow Liskov substitution principle:
-
 - Make sure subclasses match full input/output behavior of parent classes
 - Avoid throwing exceptions in child methods not thrown in parents
 - Favor composition over inheritance if behavior differs substantially
-- Make base classes abstract if methods need different implementations
-- Split base classes into separate class hierarchies if behaviors differ
-- Pass child class objects transparently to methods expecting parent objects 
+- Make base classes abstract if methods need different implementations and split into separate class
+hierarchies if behaviors differ
 - Use dependency inversion - depend on abstractions not concrete classes
-- Consider using interfaces rather than superclass to define contracts
-- Use polymorphism so correct implementation is invoked based on type
 
 For example, refactoring validation classes:
 
@@ -272,30 +247,20 @@ This ensures child classes have consistent contracts as parent classes, and unex
 
 ## 4. Interface Segregation Principle
 
-This principle states that clients should not be forced to depend on methods they don't use from an interface. Interfaces should be split to serve specific client needs.
+This principle states that clients should not be forced to depend on methods they don't use from
+an interface. Interfaces should be split to serve specific client needs.
 
 Here are some symptoms that indicate code is violating the interface segregation principle:
-
-- Interfaces have many methods unrelated to each other
+- Interfaces have many methods unrelated to each other and changes affect many classes.
 - Clients are forced to depend on and implement unused methods
-- Changes to an interface affect many classes
-- Classes depend on large, complex interfaces
-- Interfaces describe multiple, distinct functionalities
-- Classes implement interfaces just to gain some functionality
 - Classes contain empty method stubs to satisfy interfaces
 
 To refactor code to follow interface segregation principle: 
 
 - Split large interfaces into smaller, role-specific interfaces
-- Create one-method interfaces for individual behaviors 
-- Have interfaces focus on cohesive functionality
 - Move unrelated methods to new interfaces
 - Use composition from multiple interfaces rather than one large interface
 - Avoid inheriting from interfaces just to gain single method
-- Create adapter/wrapper classes to implement irrelevant interface methods
-- Hide internal interface implementation details from clients
-- Design interface APIs around use cases rather than types
-- Make interfaces orthogonal and decoupled from each other
 
 For example, splitting interface for devices:
 
@@ -342,31 +307,19 @@ class EncryptedDrive(PowerInterface, DataInterface, EncryptInterface):
 This results in lean, focused interfaces that group logically related operations.
 
 ## 5. Dependency Inversion Principle
-This principle states that high-level modules should not depend on low-level implementation details. Details should depend on abstractions.
+This principle states that high-level modules should not depend on low-level implementation details.
+Details should depend on abstractions.
 
 Here are some symptoms that indicate code is violating the dependency inversion principle:
-
 - Tight coupling between high-level and low-level classes
 - Business logic depends directly on concrete implementations
-- Classes new up concrete dependencies directly
 - Changing implementations requires changing lots of classes
 - Unit testing is difficult due to many hardcoded dependencies
 - Lack of abstraction makes code hard to extend
-- Code relies on specific data sources, devices, platforms etc.
 
 To refactor code to follow dependency inversion principle:
-
 - Depend on abstractions (interfaces) rather than concrete classes
 - Inject dependencies through constructor or setter methods 
-- Use dependency injection frameworks to manage dependencies
-- Define interfaces/abstract classes for dependencies
-- Make high-level components work with abstraction interfaces
-- Have abstraction interfaces call concrete implementations
-- Make interfaces general and not implementation-specific
-- Implement adapter classes to convert concrete types if needed
-- Configure dependencies externally rather than hardcoding
-- Enable swapping implementations via configuration  
-- Segregate interfaces, application, and infrastructure logic
 
 For example, refactoring data access code:
 
@@ -417,7 +370,9 @@ This removes tight coupling between modules and enables easier extensibility and
 
 ## 6. Conclusion
 
-Applying the SOLID principles consistently improves code quality and maintainability. Code becomes more modular,
-reusable and adaptable to change when needed. While principles like single responsibility may seem obvious, actually
-following them strictly takes discipline. Use these principles as guiding tenets when designing object oriented systems.
+Applying the SOLID principles consistently improves code quality and maintainability. Code becomes
+more modular, reusable and adaptable to change when needed. While principles like single 
+responsibility may seem obvious, actually ollowing them strictly takes discipline. Use these
+principles as guiding tenets when designing object oriented systems.
+
 
